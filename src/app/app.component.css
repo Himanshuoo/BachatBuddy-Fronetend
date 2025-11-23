@@ -5,9 +5,19 @@
 /* Wrapper */
 .pdd-container {
   padding: 10px 15px;
-  background: #fffaf0; /* soft cream */
+  background: #fffaf0;
+  /* soft cream */
   border-radius: 16px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.main-content {
+  padding-top: 180px;
 }
 
 /* Navbar */
@@ -16,14 +26,20 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  background-color: #f4e2d8; /* Pita/Cream tone */
-  color: #3c2f2f;
+  background-color: #f4e2d8;
+  /* Pita/Cream tone */
+  color: #1a1a1a;
   border-radius: 16px;
   padding: 12px 20px;
   gap: 15px;
 }
 
 /* Logo */
+.brand-logo {
+  text-decoration: none;
+  color: #1a1a1a;
+}
+
 .brand-logo img {
   width: 45px;
   height: 45px;
@@ -35,6 +51,28 @@
   font-size: 28px;
   font-weight: bold;
   color: #1a1a1a;
+}
+
+/* Hamburger Menu Button */
+.hamburger-btn {
+  display: none;
+  /* Hidden by default on desktop */
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 1003;
+  position: relative;
+}
+
+.hamburger-line {
+  width: 25px;
+  height: 3px;
+  background-color: #3c2f2f;
+  border-radius: 2px;
+  transition: all 0.3s ease;
 }
 
 /* Nav Links */
@@ -57,7 +95,8 @@
 }
 
 .nav-link:hover {
-  background-color: #e9d4c3; /* slightly darker cream */
+  background-color: #e9d4c3;
+  /* slightly darker cream */
 }
 
 /* Search */
@@ -67,6 +106,7 @@
   gap: 10px;
   align-items: center;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .search-bar {
@@ -193,6 +233,7 @@
     opacity: 0;
     transform: translateY(-5px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -205,32 +246,75 @@
 
 /* Tablets and smaller */
 @media (max-width: 992px) {
-  .pdd-navbar {
-    flex-direction: column;
-    align-items: flex-start;
+
+  /* Show hamburger button */
+  .hamburger-btn {
+    display: flex;
+    order: 2;
   }
 
-  .nav-links {
+  .pdd-navbar {
     flex-wrap: wrap;
-    justify-content: flex-start;
-    width: 100%;
+    position: relative;
+  }
+
+  .brand-logo {
+    order: 1;
   }
 
   .auth-links {
-    width: 100%;
-    justify-content: flex-start;
-    margin-top: 10px;
+    order: 3;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-left: auto;
   }
 
-  .profile-dropdown {
-    order: -1; /* Move profile icon to top */
+  /* Compact menu that appears adjacent to hamburger */
+  .nav-links {
+    position: absolute;
+    top: 50px;
+    right: 50px;
+    height: auto;
+    background-color: #f4e2d8;
+    flex-direction: column;
+    width: 160px;
+    padding: 8px 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    z-index: 1002;
+    order: 4;
+    border-radius: 8px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, visibility 0.3s;
+  }
+
+  /* Show nav-links when active */
+  .nav-links.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .nav-link {
+    width: 100%;
+    text-align: left;
+    padding: 10px 15px;
+    border-radius: 0;
+    border-bottom: 1px solid rgba(60, 47, 47, 0.1);
+    font-size: 14px;
+  }
+
+  .nav-link:last-child {
+    border-bottom: none;
   }
 }
 
 /* Mobile (portrait and smaller devices) */
 @media (max-width: 600px) {
   .pdd-navbar {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     gap: 10px;
   }
@@ -239,19 +323,13 @@
     font-size: 22px;
   }
 
-  .nav-links {
-    flex-direction: column;
-    gap: 8px;
-  }
-
   .auth-links {
-    flex-direction: column;
-    gap: 8px;
-    align-items: center;
+    gap: 5px;
   }
 
-  .profile-dropdown {
-    align-self: center;
+  .nav-links {
+    width: 150px;
+    right: 45px;
   }
 
   .dropdown-content {
@@ -262,6 +340,7 @@
     width: 200px;
   }
 }
+
 /* === CART LINK === */
 .cart-link {
   position: relative;
@@ -270,7 +349,8 @@
   gap: 6px;
   font-size: 18px;
   font-weight: 600;
-  color:  black; /* Orange text */
+  color: black;
+  /* Orange text */
   text-decoration: none;
   transition: 0.3s;
   padding: 6px 10px;
@@ -284,7 +364,8 @@
 
 /* 🛒 Emoji styling */
 .black-cart {
-  color: #000 !important; /* Force emoji to black */
+  color: #000 !important;
+  /* Force emoji to black */
   font-size: 32px;
   line-height: 1;
   display: inline-block;

@@ -7,36 +7,37 @@
       <div class="logo-text">BachatBuddy 🛍️</div>
     </a>
 
+    <!-- Hamburger Menu Button -->
+    <button class="hamburger-btn" (click)="toggleMenu()" aria-label="Toggle menu">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+
     <!-- Main Navigation Links -->
-    <div class="nav-links">
-       <a routerLink="/home" class="nav-link">🏠 Home</a>
-      <a routerLink="/grocries" class="nav-link">🥦 Groceries</a>
-      <a routerLink="/electronics" class="nav-link">🔌 Electronics</a>
-      <a routerLink="/fashion" class="nav-link">👗 Fashion</a>
-      <a routerLink="/beauty" class="nav-link">💄 Beauty</a>
-       <a routerLink="/products" class="nav-link">💍 Wedding Bazaar</a>
-      <a routerLink="/deals" class="nav-link">🔥 Deals</a>
+    <div class="nav-links" [class.active]="isMenuOpen">
+      <a routerLink="/home" class="nav-link" (click)="closeMenu()">🏠 Home</a>
+      <a routerLink="/grocries" class="nav-link" (click)="closeMenu()">🥦 Groceries</a>
+      <a routerLink="/electronics" class="nav-link" (click)="closeMenu()">🔌 Electronics</a>
+      <a routerLink="/fashion" class="nav-link" (click)="closeMenu()">👗 Fashion</a>
+      <a routerLink="/beauty" class="nav-link" (click)="closeMenu()">💄 Beauty</a>
+      <a routerLink="/products" class="nav-link" (click)="closeMenu()">💍 Wedding Bazaar</a>
+      <a routerLink="/deals" class="nav-link" (click)="closeMenu()">🔥 Deals</a>
     </div>
 
     <!-- Right-side Auth & Profile Section -->
     <div class="auth-links">
-        <!-- 🛒 Cart Icon -->
       <!-- 🛒 Cart Link -->
-        <!-- 🛒 Cart Link -->
-          <a routerLink="/cart" class="nav-link cart-link">
-            <span class="cart-icon black-cart">🛒</span>
-            <span class="cart-text">Cart</span>
-            <span *ngIf="cartCount > 0" class="cart-badge">{{ cartCount }}</span>
-          </a>
+      <a routerLink="/cart" class="nav-link cart-link">
+        <span class="cart-icon black-cart">🛒</span>
+        <span class="cart-text">Cart</span>
+        <span *ngIf="cartCount > 0" class="cart-badge">{{ cartCount }}</span>
+      </a>
 
       <!-- 👤 Profile Dropdown (only when logged in) -->
       <ng-container *ngIf="isLoggedIn">
         <div class="profile-dropdown" (click)="toggleProfileDropdown($event)">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-            alt="Profile"
-            class="profile-icon"
-          />
+          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-icon" />
           <div class="dropdown-content" *ngIf="isProfileDropdownOpen">
             <div class="profile-header">
               <p class="username">{{ userName }}</p>
@@ -51,11 +52,7 @@
       </ng-container>
 
       <!-- 💬 Ask Buddy Button -->
-      <a
-        routerLink="/assistant"
-        class="nav-link ask-buddy-btn"
-        title="Need help? Ask Buddy 💬"
-      >
+      <a routerLink="/assistant" class="nav-link ask-buddy-btn" title="Need help? Ask Buddy 💬">
         💬 Ask Buddy
       </a>
 
@@ -70,16 +67,13 @@
 
   <!-- Search Bar -->
   <div class="search-bar-wrapper">
-    <input
-      class="search-bar"
-      id="txtsearch"
-      type="text"
-      placeholder="🔍 Search for products, deals, discounts..."
-    />
+    <input class="search-bar" id="txtsearch" type="text" placeholder="🔍 Search for products, deals, discounts..." />
     <button class="search-btn" (click)="show()">Search</button>
   </div>
 
 </div>
 
 <!-- Page Router Outlet -->
-<router-outlet></router-outlet>
+<div class="main-content">
+  <router-outlet></router-outlet>
+</div>

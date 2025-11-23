@@ -11,6 +11,7 @@ export class AppComponent implements OnInit {
   title = 'BachatBuddy';
   isLoggedIn = false;
   isProfileDropdownOpen = false;
+  isMenuOpen = false; // Hamburger menu state
   userName: string | null = null;
   cartCount: any;
 
@@ -44,11 +45,23 @@ export class AppComponent implements OnInit {
     this.isProfileDropdownOpen = !this.isProfileDropdownOpen;
   }
 
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  closeMenu(): void {
+    this.isMenuOpen = false;
+  }
+
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event): void {
     const target = event.target as HTMLElement;
     if (!target.closest('.profile-dropdown')) {
       this.isProfileDropdownOpen = false;
+    }
+    // Close menu when clicking outside hamburger button and nav-links
+    if (!target.closest('.hamburger-btn') && !target.closest('.nav-links')) {
+      this.isMenuOpen = false;
     }
   }
 
