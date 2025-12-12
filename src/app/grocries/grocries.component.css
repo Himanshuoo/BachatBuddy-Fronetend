@@ -24,7 +24,7 @@ body {
 .deal-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 28px;
+  gap: 25px;
   width: 100%;
 }
 
@@ -33,11 +33,12 @@ body {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(6px);
   border-radius: 18px;
-  padding: 20px; /* reduced */
+  padding:48px; /* compact */
   position: relative;
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   animation: fadeInUp 0.5s ease;
+  width: 103%;
 }
 
 .deal-card:hover {
@@ -47,7 +48,7 @@ body {
 
 .deal-card img {
   width: 100%;
-  height: 180px; /* reduced from 230px */
+  height: 160px; /* compact */
   object-fit: cover;
   border-radius: 14px;
 }
@@ -59,7 +60,7 @@ body {
   left: 16px;
   background: #ff4d4d;
   color: #fff;
-  padding: 6px 12px; /* reduced */
+  padding: 6px 12px;
   border-radius: 50px;
   font-size: 11px;
   font-weight: 600;
@@ -71,7 +72,7 @@ body {
   right: 16px;
   background: #007bff;
   color: #fff;
-  padding: 6px 12px; /* reduced */
+  padding: 6px 12px;
   border-radius: 50px;
   font-size: 11px;
   font-weight: 500;
@@ -79,7 +80,7 @@ body {
 
 /* Product Info */
 .product-title {
-  margin: 14px 0 6px; /* reduced */
+  margin: 10px 0 4px;
   font-size: 18px;
   font-weight: 600;
   color: #222;
@@ -90,7 +91,7 @@ body {
   gap: 10px;
   align-items: center;
   font-size: 16px;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .price-row del {
@@ -106,7 +107,7 @@ body {
 .time-left {
   font-size: 14px;
   color: #ff5722;
-  margin: 6px 0; /* reduced */
+  margin: 4px 0;
   font-weight: 500;
   animation: pulse 1.5s infinite;
 }
@@ -122,7 +123,7 @@ body {
   background: #e0e0e0;
   height: 8px;
   border-radius: 6px;
-  margin: 10px 0; /* reduced */
+  margin: 8px 0;
 }
 
 .progress-bar {
@@ -138,45 +139,64 @@ body {
 .joined-info {
   font-size: 14px;
   color: #444;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .viewing-now {
   font-size: 13px;
   color: #777;
-  margin-bottom: 12px; /* reduced */
+  margin-bottom: 8px;
 }
 
-/* Buttons */
+/* ✨ CLEAN TRANSPARENT BUTTON DESIGN */
 button {
   width: 100%;
-  padding: 10px 14px; /* reduced */
+  padding: 10px 14px;
   border-radius: 50px;
-  border: none;
+  border: 1px solid #ddd; /* border only */
+  background: transparent; /* transparent default */
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.25s ease, transform 0.2s ease;
+  transition: background 0.25s ease, color 0.25s ease, 
+              border-color 0.25s ease, transform 0.25s ease;
   margin-bottom: 8px;
-  font-size: 14px; /* reduced */
+  font-size: 14px;
+  color: #333;
 }
 
+/* Hover lift */
 button:hover {
   transform: translateY(-2px);
 }
 
-.btn-primary {
+/* Join Group hover */
+.btn-primary:hover {
   background: #28a745;
+  border-color: #28a745;
   color: white;
 }
 
-.btn-secondary {
-  background: #eaeaea;
-  color: #333;
+/* View Details hover */
+.btn-secondary:hover {
+  background: #e0e0e0;
+  border-color: #bdbdbd;
+  color: #000;
 }
 
-.btn-invite {
-  background: #007bff;
+/* Invite Friends hover */
+.btn-invite:hover {
+  background: #ff3e6c;
+  border-color: #ff3e6c;
   color: white;
+}
+
+/* Disabled */
+.btn-primary:disabled {
+  background: transparent;
+  border-color: #ccc;
+  color: #aaa;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* Skeleton Loader */
@@ -187,7 +207,7 @@ button:hover {
 }
 
 .skeleton-card {
-  height: 240px; /* reduced */
+  height: 240px;
   background: linear-gradient(90deg, #eee, #f5f5f5, #eee);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
@@ -226,17 +246,14 @@ button:hover {
   }
 
   .deal-card {
-    padding: 16px;
+    padding: 12px;
   }
 
   .deal-card img {
-    height: 150px;
+    height: 140px;
   }
 
   .section-title {
     font-size: 24px;
   }
-
-
-  
 }
