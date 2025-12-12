@@ -1,1 +1,81 @@
-<p>grocries works!</p>
+<section class="group-deals">
+  <h2 class="section-title">🔥 Popular Grocery Deals</h2>
+
+  <!-- Skeleton Loader -->
+  <div *ngIf="loading" class="skeleton-grid">
+    <div class="skeleton-card" *ngFor="let i of [1,2,3,4]"></div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-message">
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Deals Grid -->
+  <div class="deal-grid" *ngIf="!loading && !error">
+    <div class="deal-card" *ngFor="let item of popularProducts">
+
+      <!-- Savings Badge -->
+      <span class="badge-savings">
+        Save ₹{{ item.originalPrice - item.groupPrice }}
+      </span>
+
+      <!-- Category Tag -->
+      <span class="category-tag">{{ item.category }}</span>
+
+      <!-- Product Image -->
+      <img
+        [src]="item.productImage"
+        loading="lazy"
+        [alt]="item.productName"
+      />
+
+      <h4 class="product-title">{{ item.productName }}</h4>
+
+      <!-- Price Section -->
+      <div class="price-row">
+        <del>₹{{ item.originalPrice }}</del>
+        <strong>₹{{ item.groupPrice }}</strong>
+      </div>
+
+      <!-- Time Left -->
+      <p class="time-left">⏳ {{ item.timeLeft }} left</p>
+
+      <!-- Progress Bar -->
+      <div class="progress-container">
+        <div
+          class="progress-bar"
+          [style.width.%]="item.progressPercentage"
+          [ngClass]="{
+            'low': item.progressPercentage < 40,
+            'mid': item.progressPercentage >= 40 && item.progressPercentage < 80,
+            'high': item.progressPercentage >= 80
+          }"
+        ></div>
+      </div>
+
+      <p class="joined-info">
+        {{ item.currentJoined }} joined / {{ item.totalNeeded }} needed
+      </p>
+
+      <p class="viewing-now">👀 {{ item.viewingNow }} viewing now</p>
+
+      <!-- Buttons -->
+      <button
+        class="btn-primary"
+        (click)="joinGroup(item.id)"
+        [disabled]="item.hasUserJoined || item.isGroupComplete"
+      >
+        {{ item.hasUserJoined ? 'Already Joined' : item.isGroupComplete ? 'Group Full' : 'Join Group' }}
+      </button>
+
+      <button class="btn-secondary" (click)="openDeal(item.id)">
+        View Details
+      </button>
+
+      <button class="btn-invite" (click)="shareDeal(item)">
+        Invite Friends
+      </button>
+    </div>
+  </div>
+</section>

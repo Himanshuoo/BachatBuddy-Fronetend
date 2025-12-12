@@ -17,6 +17,8 @@ export interface GroupBuyingProduct {
     hasUserJoined: boolean;
     savingsAmount?: number;
     savingsPercentage?: number;
+    viewingNow?: number;
+    timeLeft?: string;
 }
 
 // Interface for Join Group Request
