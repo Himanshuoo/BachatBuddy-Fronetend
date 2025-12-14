@@ -17,7 +17,7 @@ export class GrocriesComponent implements OnInit {
   constructor(
     private groupBuyingService: GroupBuyingService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadGroupBuyingProducts();
@@ -43,20 +43,20 @@ export class GrocriesComponent implements OnInit {
    * ✅ Enhance product with UI‑friendly fields
    */
   private mapProductUI(product: GroupBuyingProduct): GroupBuyingProduct {
-  const progress = (product.currentJoined / product.totalNeeded) * 100;
+    const progress = (product.currentJoined / product.totalNeeded) * 100;
 
-  return {
-    ...product,
-    progressPercentage: Math.min(progress, 100),
-    isGroupComplete: product.currentJoined >= product.totalNeeded,
-    hasUserJoined: product.hasUserJoined ?? false,
-    viewingNow: this.randomViewingCount(),
-    timeLeft: product.expiresAt
-      ? this.calculateTimeLeft(product.expiresAt)
-      : 'Limited time',
-    category: product.category ?? 'Groceries'
-  };
-}
+    return {
+      ...product,
+      progressPercentage: Math.min(progress, 100),
+      isGroupComplete: product.currentJoined >= product.totalNeeded,
+      hasUserJoined: product.hasUserJoined ?? false,
+      viewingNow: this.randomViewingCount(),
+      timeLeft: product.expiresAt
+        ? this.calculateTimeLeft(product.expiresAt)
+        : 'Limited time',
+      category: product.category ?? 'Groceries'
+    };
+  }
   /**
    * ✅ Fake real‑time social proof (5–40 viewers)
    */
@@ -101,7 +101,8 @@ export class GrocriesComponent implements OnInit {
       next: (response) => {
         alert(response.message);
         if (response.success) {
-          this.loadGroupBuyingProducts(); // Refresh UI
+          // Redirect to Buy page with product ID and type
+          this.router.navigate(['/buy', productId], { queryParams: { type: 'group' } });
         }
       },
       error: (err) => {

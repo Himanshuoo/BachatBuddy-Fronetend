@@ -5,12 +5,16 @@ import { Observable, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class OrdersService {
-  private base = 'http://localhost:8080/users';
+  private base = 'http://localhost:8080/api/orders';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  getOrders(uid: string): Observable<any[]> {
-    if (!uid) return of([]);
-    return this.http.get<any[]>(`${this.base}/${uid}/orders`);
+  getOrders(uid: string) {
+    return this.http.get<any[]>(`${this.base}/user/${uid}`);
   }
+
+  createOrder(uid: string, body: any) {
+    return this.http.post(`${this.base}/user/${uid}`, body);
+  }
+
 }

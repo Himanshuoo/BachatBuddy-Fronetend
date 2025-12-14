@@ -1,52 +1,137 @@
 <div class="page">
-  <h2 class="form-title"><span>📍 My Addresses</span></h2>
-  <p class="form-subtitle">Manage your saved delivery locations</p>
+  <div class="page-header">
+    <h2 class="form-title">📍 My Addresses</h2>
+    <p class="form-subtitle">Manage your delivery locations with ease</p>
+  </div>
 
-  <div *ngIf="loading">⏳ Loading...</div>
-  <div *ngIf="error" class="error">⚠️ {{ error }}</div>
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading addresses...</p>
+  </div>
 
-  <!-- Address List -->
-  <div *ngIf="!loading && addresses.length > 0">
+  <div *ngIf="error && !loading" class="error-banner">
+    ⚠️ {{ error }}
+  </div>
+
+  <div *ngIf="message" class="success-banner">
+    ✅ {{ message }}
+  </div>
+
+  <!-- Address List Grid -->
+  <div *ngIf="!loading && addresses.length > 0" class="address-grid">
     <div *ngFor="let a of addresses" class="address-card" [ngClass]="{ 'default': a.isDefault }">
-      <div><strong>👤 {{ a.name }}</strong> <span *ngIf="a.isDefault">⭐ (Default)</span></div>
-      <div>🏠 {{ a.line1 }}, {{ a.line2 }}</div>
-      <div>🌆 {{ a.city }}, {{ a.state }} - 📮 {{ a.pincode }}</div>
-      <div>📞 {{ a.phone }}</div>
-      <div class="button-group">
-        <button>✏️ Edit</button>
-        <button>🗑️ Delete</button>
+      <div class="card-header">
+        <strong>👤 {{ a.name }}</strong>
+        <span *ngIf="a.isDefault" class="badge-default">⭐ Default</span>
+      </div>
+      <div class="card-body">
+        <p>🏠 {{ a.line1 }}</p>
+        <p *ngIf="a.line2">{{ a.line2 }}</p>
+        <p>🌆 {{ a.city }}, {{ a.state }} - {{ a.pincode }}</p>
+        <p>📞 {{ a.phone }}</p>
+      </div>
+      <div class="card-actions">
+        <button (click)="startEdit(a)" class="btn-icon" title="Edit">✏️</button>
+        <button (click)="deleteAddress(a.id)" class="btn-icon delete" title="Delete">🗑️</button>
       </div>
     </div>
   </div>
 
   <!-- No addresses -->
-  <div *ngIf="!loading && addresses.length === 0" class="empty-message">
-    🏚️ No addresses found.
+  <div *ngIf="!loading && addresses.length === 0" class="empty-state">
+    <div class="empty-icon">🏚️</div>
+    <p>No addresses found. Add one below!</p>
   </div>
 
-  <hr />
+  <hr class="divider" />
 
   <!-- Address Form -->
-  <h3 class="form-title"><span>{{ editingId ? '✏️ Edit' : '➕ Add' }} Address</span></h3>
-  <p class="form-subtitle">Fill in your details below</p>
+  <div class="form-container">
+    <h3 class="form-title"><span>{{ editingId ? '✏️ Edit' : '➕ Add' }} Address</span></h3>
+    <p class="form-subtitle">Enter your delivery details</p>
 
-  <form [formGroup]="form" (ngSubmit)="save()" class="address-form">
-    <input formControlName="name" class="form-control" placeholder="👤 Name" />
-    <input formControlName="phone" class="form-control" placeholder="📞 Phone" />
-    <input formControlName="line1" class="form-control" placeholder="🏠 Address line 1" />
-    <input formControlName="line2" class="form-control" placeholder="🏠 Address line 2" />
-    <input formControlName="city" class="form-control" placeholder="🌆 City" />
-    <input formControlName="state" class="form-control" placeholder="🗺️ State" />
-    <input formControlName="pincode" class="form-control" placeholder="📮 Pincode" />
+    <form [formGroup]="form" (ngSubmit)="save()" class="address-form">
+      <div class="form-grid">
+        <!-- Name -->
+        <div class="form-group">
+          <label>👤 Name</label>
+          <input formControlName="name" class="form-control" placeholder="John Doe"
+            [class.is-invalid]="f['name'].touched && f['name'].invalid" />
+          <div *ngIf="f['name'].touched && f['name'].invalid" class="invalid-feedback">
+            <small *ngIf="f['name'].errors?.['required']">Name is required</small>
+          </div>
+        </div>
 
-    <div class="checkbox-row">
-      <input type="checkbox" formControlName="isDefault" id="isDefault" />
-      <label for="isDefault">⭐ Set as default</label>
-    </div>
+        <!-- Phone -->
+        <div class="form-group">
+          <label>📞 Phone</label>
+          <input formControlName="phone" class="form-control" placeholder="10-digit number"
+            [class.is-invalid]="f['phone'].touched && f['phone'].invalid" />
+          <div *ngIf="f['phone'].touched && f['phone'].invalid" class="invalid-feedback">
+            <small *ngIf="f['phone'].errors?.['required']">Phone is required</small>
+            <small *ngIf="f['phone'].errors?.['pattern']">Must be 10 digits</small>
+          </div>
+        </div>
 
-    <div class="button-group">
-      <button type="submit">{{ editingId ? '✅ Update' : '➕ Add' }}</button>
-      <button type="button">❌ Cancel</button>
-    </div>
-  </form>
+        <!-- Line 1 -->
+        <div class="form-group full-width">
+          <label>🏠 Address Line 1</label>
+          <input formControlName="line1" class="form-control" placeholder="House no, Street area"
+            [class.is-invalid]="f['line1'].touched && f['line1'].invalid" />
+          <div *ngIf="f['line1'].touched && f['line1'].invalid" class="invalid-feedback">
+            <small>Address line 1 is required</small>
+          </div>
+        </div>
+
+        <!-- Line 2 -->
+        <div class="form-group full-width">
+          <label>🏢 Address Line 2 (Optional)</label>
+          <input formControlName="line2" class="form-control" placeholder="Landmark, Apartment info" />
+        </div>
+
+        <!-- City -->
+        <div class="form-group">
+          <label>🌆 City</label>
+          <input formControlName="city" class="form-control" placeholder="e.g. Mumbai"
+            [class.is-invalid]="f['city'].touched && f['city'].invalid" />
+          <div *ngIf="f['city'].touched && f['city'].invalid" class="invalid-feedback">
+            <small>City is required</small>
+          </div>
+        </div>
+
+        <!-- State -->
+        <div class="form-group">
+          <label>🗺️ State</label>
+          <input formControlName="state" class="form-control" placeholder="e.g. Maharashtra"
+            [class.is-invalid]="f['state'].touched && f['state'].invalid" />
+          <div *ngIf="f['state'].touched && f['state'].invalid" class="invalid-feedback">
+            <small>State is required</small>
+          </div>
+        </div>
+
+        <!-- Pincode -->
+        <div class="form-group">
+          <label>📮 Pincode</label>
+          <input formControlName="pincode" class="form-control" placeholder="6 digits"
+            [class.is-invalid]="f['pincode'].touched && f['pincode'].invalid" />
+          <div *ngIf="f['pincode'].touched && f['pincode'].invalid" class="invalid-feedback">
+            <small *ngIf="f['pincode'].errors?.['required']">Pincode is required</small>
+            <small *ngIf="f['pincode'].errors?.['pattern']">Must be 6 digits</small>
+          </div>
+        </div>
+
+        <!-- Default Checkbox -->
+        <div class="form-group checkbox-group">
+          <input type="checkbox" formControlName="isDefault" id="isDefault" />
+          <label for="isDefault">⭐ Set as default address</label>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="button-group">
+        <button type="submit" class="btn-primary">{{ editingId ? '✅ Update Address' : '➕ Add Address' }}</button>
+        <button type="button" class="btn-secondary" (click)="cancelEdit()">❌ Cancel</button>
+      </div>
+    </form>
+  </div>
 </div>

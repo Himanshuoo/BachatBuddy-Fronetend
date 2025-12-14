@@ -20,6 +20,10 @@ export class UserService {
     return this.http.post(`${this.baseUrl}/register`, user);
   }
 
+  getUserById(id: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/${id}`);
+  }
+
   loginUser(username: string, password: string): Observable<any> {
     const body = { username, password };
     return this.http.post<any>(`${this.baseUrl}/login`, body).pipe(

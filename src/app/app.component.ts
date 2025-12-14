@@ -26,7 +26,17 @@ export class AppComponent implements OnInit {
       this.isLoggedIn = status;
 
       if (status) {
-        this.userName = sessionStorage.getItem('uid') || 'User';
+        const uid = sessionStorage.getItem('uid');
+        if (uid) {
+          this.userService.getUserById(uid).subscribe({
+            next: (user) => {
+              console.log('Fetched user:', user);
+              const name = user?.name || user?.username || user?.data?.name || user?.data?.username;
+              this.userName = name || 'User';
+            },
+            error: () => this.userName = 'User'
+          });
+        }
       } else {
         this.userName = null;
       }
@@ -36,7 +46,7 @@ export class AppComponent implements OnInit {
     const uid = sessionStorage.getItem('uid');
     if (uid) {
       this.userService.setLoginStatus(true);
-      this.userName = uid;
+      // Data fetch handled by subscription above
     }
   }
 

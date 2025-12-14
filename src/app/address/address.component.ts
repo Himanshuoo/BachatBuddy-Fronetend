@@ -16,6 +16,8 @@ export class AddressComponent implements OnInit {
   error: string | null = null;
   message: string | null = null;
 
+  get f() { return this.form.controls; }
+
   constructor(
     private addressService: AddressService,
     private fb: FormBuilder,
@@ -70,14 +72,17 @@ export class AddressComponent implements OnInit {
   }
 
   save(): void {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
     const uid = sessionStorage.getItem('uid');
     if (!uid) return;
 
     const payload = this.form.value;
 
     if (this.editingId) {
-      this.addressService.updateAddress(uid, this.editingId, payload).subscribe({
+      this.addressService.updateAddress(this.editingId, payload).subscribe({
         next: () => {
           this.message = 'Address updated successfully!';
           this.cancelEdit();
@@ -107,7 +112,7 @@ export class AddressComponent implements OnInit {
     const uid = sessionStorage.getItem('uid');
     if (!uid) return;
 
-    this.addressService.deleteAddress(uid, id).subscribe({
+    this.addressService.deleteAddress(id).subscribe({
       next: () => {
         this.message = 'Address deleted successfully!';
         this.load(uid);

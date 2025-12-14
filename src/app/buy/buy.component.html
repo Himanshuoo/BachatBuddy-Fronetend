@@ -14,16 +14,13 @@
       <h3>2. DELIVERY ADDRESS</h3>
 
       <div class="address-list">
-        <div
-          *ngFor="let a of addresses; let i = index"
-          class="address-card"
-          [class.selected]="i === selectedAddressIndex"
-          (click)="selectAddress(i)"
-        >
+        <div *ngFor="let a of addresses; let i = index" class="address-card"
+          [class.selected]="i === selectedAddressIndex" (click)="selectAddress(i)">
           <input type="radio" [checked]="i === selectedAddressIndex" />
           <div>
             <strong>{{ a.name }}</strong> ({{ a.phone }})
-            <p>{{ a.address }}</p>
+            <p>{{ a.line1 }}<span *ngIf="a.line2">, {{ a.line2 }}</span></p>
+            <p>{{ a.city }}, {{ a.state }} - {{ a.pincode }}</p>
           </div>
         </div>
       </div>
@@ -33,10 +30,7 @@
       </button>
 
       <div *ngIf="editMode" class="add-address-box">
-        <textarea
-          [(ngModel)]="newAddress"
-          placeholder="Enter full address"
-        ></textarea>
+        <textarea [(ngModel)]="newAddress" placeholder="Enter full address"></textarea>
         <button class="save-btn" (click)="saveNewAddress()">Save Address</button>
       </div>
     </div>

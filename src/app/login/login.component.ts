@@ -11,7 +11,7 @@ export class LoginComponent {
   credentials = { username: '', password: '' };
   status: string = '';
 
-  constructor(private router: Router, private userService: UserService) {}
+  constructor(private router: Router, private userService: UserService) { }
 
   login(): void {
     const username = this.credentials.username.trim();
@@ -24,19 +24,22 @@ export class LoginComponent {
 
     this.userService.loginUser(username, password).subscribe({
       next: (user: any) => {
-        // ✅ Clear old session and set new login state
         sessionStorage.clear();
-        sessionStorage.setItem('uid', username);
 
-        this.userService.setLoginStatus(true); // notify global state
+        // ✅ Store numeric userId for backend calls
+        sessionStorage.setItem('uid', user.id.toString());
 
-        // ✅ Check if AuthGuard saved a redirect URL
+        // ✅ Store username for UI display
+        sessionStorage.setItem('username', user.username);
+
+        this.userService.setLoginStatus(true);
+
         const redirectUrl = sessionStorage.getItem('redirectUrl');
         if (redirectUrl) {
-          sessionStorage.removeItem('redirectUrl'); // cleanup
-          this.router.navigateByUrl(redirectUrl);   // go back to intended page
+          sessionStorage.removeItem('redirectUrl');
+          this.router.navigateByUrl(redirectUrl);
         } else {
-          this.router.navigate(['/home']); // fallback if no redirect
+          this.router.navigate(['/home']);
         }
       },
       error: (err: any) => {
