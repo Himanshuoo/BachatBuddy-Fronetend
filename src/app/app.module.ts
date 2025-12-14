@@ -12,7 +12,7 @@ import { NotfoundComponent } from './notfound/notfound.component';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatIconModule } from '@angular/material/icon';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DiscountPipe } from './discount.pipe';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './home/home.component';
@@ -24,6 +24,8 @@ import { ElectronicsComponent } from './electronics/electronics.component';
 import { FashionsComponent } from './fashions/fashions.component';
 import { BeautyComponent } from './beauty/beauty.component';
 import { OrdersComponent } from './orders/orders.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -52,14 +54,15 @@ import { OrdersComponent } from './orders/orders.component';
     ReactiveFormsModule,
     HttpClientModule,
     DiscountPipe
-],
-  providers: [
-    provideAnimationsAsync()
   ],
-  
+  providers: [
+    provideAnimationsAsync(),
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
+
   bootstrap: [AppComponent],
 
- 
+
 })
 
 export class AppModule { }

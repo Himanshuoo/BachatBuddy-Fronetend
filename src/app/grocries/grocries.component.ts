@@ -26,13 +26,18 @@ export class GrocriesComponent implements OnInit {
   loadGroupBuyingProducts(): void {
     this.loading = true;
 
-    this.groupBuyingService.getAllActiveGroupBuys().subscribe({
+    // Use specific category fetch
+    this.groupBuyingService.getProductsByCategory('Groceries').subscribe({
       next: (products) => {
         this.popularProducts = products.map(p => this.mapProductUI(p));
         this.loading = false;
+
+        if (this.popularProducts.length === 0) {
+          this.error = 'No grocery deals found at the moment.';
+        }
       },
       error: (err) => {
-        console.error('Error loading group buying products:', err);
+        console.error('Error loading grocery products:', err);
         this.error = 'Failed to load products. Please try again later.';
         this.loading = false;
       }

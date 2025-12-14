@@ -24,22 +24,41 @@ export class LoginComponent {
 
     this.userService.loginUser(username, password).subscribe({
       next: (user: any) => {
-        sessionStorage.clear();
+        console.log('Login response:', user); // Debugging
 
-        // ✅ Store numeric userId for backend calls
-        sessionStorage.setItem('uid', user.id.toString());
+        if (user && (user.id || user.userId)) {
+          sessionStorage.clear();
 
-        // ✅ Store username for UI display
-        sessionStorage.setItem('username', user.username);
+          // Handle both 'id' and 'userId' possibilities
+          const userId = user.id || user.userId;
 
-        this.userService.setLoginStatus(true);
+          // ✅ Store numeric userId for backend calls
+          sessionStorage.setItem('uid', userId.toString());
 
-        const redirectUrl = sessionStorage.getItem('redirectUrl');
-        if (redirectUrl) {
-          sessionStorage.removeItem('redirectUrl');
-          this.router.navigateByUrl(redirectUrl);
+          // ✅ Store username for UI display
+          sessionStorage.setItem('username', user.username || username);
+
+          // ✅ Store JWT token
+          // Try common token property names
+          const token = user.token || user.accessToken || user.jwt;
+          if (token) {
+            sessionStorage.setItem('token', token);
+          } else {
+            console.warn('No token found in login response!', user);
+          }
+
+          this.userService.setLoginStatus(true);
+
+          const redirectUrl = sessionStorage.getItem('redirectUrl');
+          if (redirectUrl) {
+            sessionStorage.removeItem('redirectUrl');
+            this.router.navigateByUrl(redirectUrl);
+          } else {
+            this.router.navigate(['/home']);
+          }
         } else {
-          this.router.navigate(['/home']);
+          console.error('Invalid login response: User ID missing', user);
+          this.status = 'Login failed: Invalid server response.';
         }
       },
       error: (err: any) => {

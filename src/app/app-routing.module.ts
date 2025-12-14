@@ -38,13 +38,13 @@ const routes: Routes = [
   { path: 'orders', component: OrdersComponent, canActivate: [AuthGuard] },
   { path: 'address', component: AddressComponent, canActivate: [AuthGuard] },
   { path: 'coupons', component: CouponsComponent },
-  { path: 'grocries', component: GrocriesComponent },
+  { path: 'groceries', component: GrocriesComponent },
   { path: 'electronics', component: ElectronicsComponent },
   { path: 'fashion', component: FashionsComponent },
   { path: 'beauty', component: BeautyComponent },
   { path: 'product-detail', component: ProductDetailComponent },
   { path: 'deals', component: DealsComponent },
-    // ✅ Protect product detail route
+  // ✅ Protect product detail route
   { path: 'product-detail/:id', component: ProductDetailComponent, canActivate: [AuthGuard] }, // view details
   { path: 'buy/:id', component: BuyComponent, canActivate: [AuthGuard] },
   { path: 'cart', component: CartComponent },
