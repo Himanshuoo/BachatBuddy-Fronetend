@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { OnlineserviceService, IProd } from '../onlineservice.service';
 import { GroupBuyingService } from '../services/group-buying.service';
 import { AddressService } from '../services/address.service';
+import { OrdersService } from '../services/order.service';
 
 @Component({
   selector: 'app-buy',
@@ -14,23 +15,27 @@ export class BuyComponent implements OnInit {
   totalPrice = 0;
   totalSavings = 0;
 
+  userName: string = '';
   addresses: any[] = [];
 
   selectedAddressIndex = -1;
-  editMode = false;
-  newAddress = '';
   selectedPaymentMode = '';
+  showPaymentDialog = false;
+  paymentDetails: any = null;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private service: OnlineserviceService,
     private groupBuyingService: GroupBuyingService,
-    private addressService: AddressService
+    private addressService: AddressService,
+    private ordersService: OrdersService
   ) { }
 
   ngOnInit(): void {
     const uid = sessionStorage.getItem('uid');
+    this.userName = sessionStorage.getItem('username') || 'Valued Customer';
+
     if (uid) {
       this.loadAddresses(uid);
     }
@@ -92,33 +97,78 @@ export class BuyComponent implements OnInit {
     this.selectedAddressIndex = index;
   }
 
-  toggleEdit() {
-    this.editMode = !this.editMode;
+  addNewAddress() {
+    this.router.navigate(['/address'], { queryParams: { returnUrl: this.router.url } });
   }
 
-  saveNewAddress() {
-    if (this.newAddress.trim()) {
-      this.addresses.push({
-        name: 'User',
-        phone: '9999999999',
-        address: this.newAddress
-      });
-      this.newAddress = '';
-      this.editMode = false;
-      this.selectedAddressIndex = this.addresses.length - 1;
-    }
-  }
 
-  selectPaymentMode(mode: string) {
+
+  openPaymentDialog(mode: string) {
     this.selectedPaymentMode = mode;
+    this.showPaymentDialog = true;
+  }
+
+  onPaymentConfirmed(details: any) {
+    this.paymentDetails = details;
+    this.showPaymentDialog = false;
+    // Keep the payment mode selected
+  }
+
+  cancelPaymentDialog() {
+    this.showPaymentDialog = false;
+    this.selectedPaymentMode = ''; // Deselect if cancelled
+    this.paymentDetails = null;
   }
 
   confirmOrder() {
-    if (!this.selectedPaymentMode) {
-      alert('Please select a payment mode before confirming.');
+    if (this.selectedAddressIndex < 0) {
+      alert('Please select a delivery address to proceed.');
       return;
     }
-    alert(`✅ Order placed successfully via ${this.selectedPaymentMode}!`);
-    this.router.navigate(['/thank-you']);
+    if (!this.selectedPaymentMode || !this.paymentDetails) {
+      alert('Please enter payment details.');
+      return;
+    }
+
+    const uid = sessionStorage.getItem('uid');
+    // ... existing login check ...
+    if (!uid) {
+      alert('User not logged in!');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const selectedAddr = this.addresses[this.selectedAddressIndex];
+
+    const orderPayload = {
+      productName: this.product?.pname,
+      imageUrl: this.product?.pimage,
+      originalPrice: this.totalPrice + this.totalSavings,
+      total: this.totalPrice,
+      savings: this.totalSavings,
+      quantity: 1,
+      paymentMode: this.selectedPaymentMode,
+      paymentDetails: this.paymentDetails, // Include details
+      shippingAddress: selectedAddr,
+      status: 'Pending',
+      date: new Date()
+    };
+
+    // ... existing service call ...
+    console.log('Placing order:', orderPayload);
+
+    this.ordersService.createOrder(uid, orderPayload).subscribe({
+      next: (res) => {
+        console.log('Order Success:', res);
+        alert(`✅ Order placed successfully via ${this.selectedPaymentMode}!`);
+        this.router.navigate(['/thank-you']);
+      },
+      error: (err) => {
+        console.error('Order Failed:', err);
+        alert('Failed to place order. Please try again.');
+      }
+    });
   }
+
+
 }

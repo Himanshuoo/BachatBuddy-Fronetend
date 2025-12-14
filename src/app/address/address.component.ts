@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AddressService } from '../services/address.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-address',
@@ -21,7 +21,8 @@ export class AddressComponent implements OnInit {
   constructor(
     private addressService: AddressService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.form = this.fb.group({
       name: ['', Validators.required],
@@ -98,7 +99,13 @@ export class AddressComponent implements OnInit {
         next: () => {
           this.message = 'Address added successfully!';
           this.form.reset();
-          this.load(uid);
+
+          const returnUrl = this.route.snapshot.queryParams['returnUrl'];
+          if (returnUrl) {
+            this.router.navigateByUrl(returnUrl);
+          } else {
+            this.load(uid);
+          }
         },
         error: (e) => {
           console.error('Add error:', e);

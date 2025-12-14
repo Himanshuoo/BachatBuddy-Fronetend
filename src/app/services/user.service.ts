@@ -5,6 +5,7 @@ import { tap } from 'rxjs/operators';
 
 interface User {
   id?: number;
+  userId?: number; // Add userId support
   name?: string;
   username?: string;
   email?: string;
@@ -44,8 +45,9 @@ export class UserService {
     const body = { username, password };
     return this.http.post<User>(`${this.baseUrl}/login`, body).pipe(
       tap(user => {
-        if (user && user.id) {
-          sessionStorage.setItem('uid', user.id.toString());
+        const uid = user.id || user.userId;
+        if (uid) {
+          sessionStorage.setItem('uid', uid.toString());
           this.setLoginStatus(true);
         }
       })

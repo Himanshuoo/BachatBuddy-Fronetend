@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit {
   constructor(
     private groupBuyingService: GroupBuyingService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadGroupBuyingProducts();
@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  joinGroup(productId: number): void {
+  joinGroup(product: GroupBuyingProduct): void {
     const userId = sessionStorage.getItem('uid');
 
     if (!userId) {
@@ -45,17 +45,13 @@ export class HomeComponent implements OnInit {
       return;
     }
 
-    this.groupBuyingService.joinGroupByIds(Number(userId), productId).subscribe({
-      next: (response) => {
-        alert(response.message);
-        if (response.success) {
-          this.loadGroupBuyingProducts(); // Refresh the products
-        }
-      },
-      error: (err) => {
-        console.error('Error joining group:', err);
-        alert('Failed to join group. Please try again.');
+    if (product.hasUserJoined) {
+      if (!confirm('You have already joined this group. Do you want to join again?')) {
+        return;
       }
-    });
+    }
+
+    // Navigate to Buy page with group type
+    this.router.navigate(['/buy', product.id], { queryParams: { type: 'group' } });
   }
 }

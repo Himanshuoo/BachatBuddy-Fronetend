@@ -22,6 +22,14 @@
           </span>
         </p>
 
+        <!-- Shipping Address Display -->
+        <div class="shipping-info" *ngIf="order.shippingAddress">
+          <h4>📍 Shipping To:</h4>
+          <p>{{ order.shippingAddress.name }} ({{ order.shippingAddress.phone }})</p>
+          <p>{{ order.shippingAddress.line1 }}, {{ order.shippingAddress.city }}</p>
+          <p>{{ order.shippingAddress.state }} - {{ order.shippingAddress.pincode }}</p>
+        </div>
+
         <div class="status-line" [ngClass]="{
           'delivered': order.status === 'Delivered',
           'cancelled': order.status === 'Cancelled',
@@ -34,8 +42,10 @@
 
         <div *ngIf="order.refundInfo" class="refund-box">
           <p><b>Refund ID:</b> {{ order.refundInfo.id }}</p>
-          <p>Refund of ₹{{ order.refundInfo.amount }} added to your account on {{ order.refundInfo.date | date:'MMM d, h:mm a' }}</p>
-          <p class="refund-note">If refund not visible, please contact your bank with reference: {{ order.refundInfo.refNumber }}</p>
+          <p>Refund of ₹{{ order.refundInfo.amount }} added to your account on {{ order.refundInfo.date | date:'MMM d,
+            h:mm a' }}</p>
+          <p class="refund-note">If refund not visible, please contact your bank with reference: {{
+            order.refundInfo.refNumber }}</p>
         </div>
 
         <div *ngIf="order.groupDeal" class="group-savings">
@@ -43,9 +53,10 @@
         </div>
 
         <div class="actions">
-          <button class="btn btn-review">⭐ Rate & Review</button>
+          <button class="btn btn-review" (click)="reviewOrder(order)">⭐ Rate & Review</button>
           <button *ngIf="order.status === 'Delivered'" class="btn btn-track">📍 Track Order</button>
-          <button *ngIf="order.status === 'Pending'" (click)="cancelOrder(order)" class="btn btn-cancel">❌ Cancel</button>
+          <button *ngIf="order.status === 'Pending'" (click)="cancelOrder(order)" class="btn btn-cancel">❌
+            Cancel</button>
         </div>
       </div>
     </div>

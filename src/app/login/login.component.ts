@@ -38,13 +38,10 @@ export class LoginComponent {
           // ✅ Store username for UI display
           sessionStorage.setItem('username', user.username || username);
 
-          // ✅ Store JWT token
-          // Try common token property names
+          // ✅ Store JWT token if available
           const token = user.token || user.accessToken || user.jwt;
           if (token) {
             sessionStorage.setItem('token', token);
-          } else {
-            console.warn('No token found in login response!', user);
           }
 
           this.userService.setLoginStatus(true);

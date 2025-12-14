@@ -26,6 +26,7 @@ import { BeautyComponent } from './beauty/beauty.component';
 import { OrdersComponent } from './orders/orders.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { PaymentDialogComponent } from './payment-dialog/payment-dialog.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,9 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     GrocriesComponent,
     ElectronicsComponent,
     FashionsComponent,
-    BeautyComponent
+
+    BeautyComponent,
+    PaymentDialogComponent
   ],
   imports: [
     BrowserModule,

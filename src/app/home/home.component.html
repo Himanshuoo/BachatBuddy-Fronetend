@@ -63,7 +63,7 @@
           <div class="progress-bar" [style.width.%]="item.progressPercentage"></div>
         </div>
         <p>{{ item.currentJoined }} joined / {{ item.totalNeeded }} needed</p>
-        <button class="btn-join" (click)="joinGroup(item.id)" [disabled]="item.hasUserJoined || item.isGroupComplete">
+        <button class="btn-join" (click)="joinGroup(item)" [disabled]="item.isGroupComplete">
           {{ item.hasUserJoined ? 'Already Joined' : item.isGroupComplete ? 'Group Full' : 'Join Group' }}
         </button>
       </div>
