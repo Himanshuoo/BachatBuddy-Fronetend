@@ -5,7 +5,7 @@
 /* Wrapper */
 .pdd-container {
   padding: 10px 15px;
-  background: #fffaf0;
+  background: #fffef5;
   /* soft cream */
   border-radius: 16px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
@@ -297,7 +297,7 @@
     width: 80%;
     max-width: 300px;
     height: 100vh;
-    background-color: white;
+    background-color: #fffef5;
     flex-direction: column;
     padding: 80px 20px 20px;
     box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);

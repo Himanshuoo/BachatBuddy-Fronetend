@@ -1,41 +1,109 @@
-<div class="container py-4">
-  <h2 class="text-center mb-4">🛒 My Cart</h2>
+<div class="cart-wrapper py-4">
+  <div class="container">
+    <!-- Empty Cart State -->
+    <div *ngIf="cartItems.length === 0" class="empty-cart-msg text-center py-5 bg-white shadow-sm rounded">
+      <img
+        src="https://rukminim2.flixcart.com/www/800/800/promos/16/05/2019/d438a32e-765a-4d8b-b4a6-520b560971e8.png?q=90"
+        alt="Empty Cart" style="width: 250px;">
+      <h4>Missing Cart items?</h4>
+      <p class="text-muted">Login to see the items you added previously</p>
+      <a routerLink="/products" class="btn btn-shop-now">Shop Now</a>
+    </div>
 
-  <div *ngIf="cartItems.length === 0" class="text-center text-muted">
-    Your cart is empty 😔
-  </div>
-
-  <div class="row g-4" *ngIf="cartItems.length > 0">
-    <div class="col-md-4 col-sm-6" *ngFor="let item of cartItems">
-      <div class="card h-100 shadow border-0 hover-shadow">
-        <div class="position-relative">
-          <img
-            [src]="item.image"
-            class="card-img-top p-3 rounded"
-            alt="{{ item.name }}"
-            style="height: 220px; object-fit: contain;"
-          />
-        </div>
-
-        <div class="card-body">
-          <h5 class="card-title fw-bold">{{ item.name }}</h5>
-          <p class="mb-2">
-            <span class="text-decoration-line-through">₹{{ item.price }}</span>
-            <span class="fw-bold text-success ms-2">₹{{ item.price }}</span>
-          </p>
-
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <div class="quantity-control">
-              <button (click)="decreaseQuantity(item)">➖</button>
-              <span>{{ item.quantity }}</span>
-              <button (click)="increaseQuantity(item)">➕</button>
+    <!-- Active Cart Layout -->
+    <div class="row" *ngIf="cartItems.length > 0">
+      <!-- Left: Cart Items List -->
+      <div class="col-md-8">
+        <div class="cart-items-container">
+          <div class="cart-header d-flex justify-content-between">
+            <span>My Cart ({{ cartItems.length }})</span>
+            <div class="d-flex align-items-center" style="font-size: 0.9rem;">
+              <span class="me-2 text-muted">📍 Deliver to:</span>
+              <strong class="text-primary me-2">{{ defaultAddress ? (defaultAddress.city + ' - ' +
+                defaultAddress.pincode) : 'No address added' }}</strong>
+              <button class="btn btn-sm btn-outline-primary" style="font-size: 0.75rem; padding: 2px 8px;"
+                (click)="changeAddress()">
+                {{ defaultAddress ? 'Change' : 'Add' }}
+              </button>
             </div>
-            <button class="btn btn-secondary btn-sm" (click)="removeItem(item)">🗑️</button>
           </div>
 
-          <button class="btn btn-primary w-100" (click)="buyNow(item)">
-            🛍️ Buy Now
-          </button>
+          <div class="cart-item-row" *ngFor="let item of cartItems">
+            <div class="row">
+              <div class="col-2 text-center item-img-container">
+                <img [src]="item.image" [alt]="item.name">
+                <div class="qty-ctrl mt-3">
+                  <button class="qty-btn" (click)="decreaseQuantity(item)" [disabled]="item.quantity <= 1">−</button>
+                  <div class="qty-value">{{ item.quantity }}</div>
+                  <button class="qty-btn" (click)="increaseQuantity(item)">+</button>
+                </div>
+              </div>
+              <div class="col-10 item-details">
+                <span class="item-name">{{ item.name }}</span>
+                <span class="item-category">Product ID: #{{ item.pid }}</span>
+                <div class="price-wrap">
+                  <span class="current-price">₹{{ item.price }}</span>
+                  <span class="original-price">₹{{ item.price + 500 }}</span>
+                  <span class="discount">₹500 Off</span>
+                </div>
+                <div class="item-action-btns">
+                  <button class="action-btn" (click)="buyNow(item)">Buy This Item</button>
+                  <button class="action-btn" (click)="removeItem(item)">Remove</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Actions -->
+          <div class="place-order-footer">
+            <button class="btn btn-place-order" (click)="proceedToCheckout()">PLACE ORDER</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Price Details Sidebar -->
+      <div class="col-md-4">
+        <div class="price-details-card">
+          <div class="card-header">Price Details</div>
+
+          <!-- Mini Item Summary -->
+          <div class="mini-items-summary">
+            <div class="mini-item-row" *ngFor="let item of cartItems">
+              <img [src]="item.image" class="mini-item-img" [alt]="item.name">
+              <div class="mini-item-info">
+                <span class="mini-item-name">{{ item.name }}</span>
+                <span class="mini-item-qty">Qty: {{ item.quantity }}</span>
+              </div>
+              <span class="mini-item-price fw-bold small">₹{{ item.price * item.quantity }}</span>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="price-row">
+              <span>Price ({{ totalItems }} item{{ totalItems > 1 ? 's' : '' }})</span>
+              <span>₹{{ totalPrice + (cartItems.length * 500) }}</span>
+            </div>
+            <div class="price-row">
+              <span>Discount</span>
+              <span class="green">− ₹{{ cartItems.length * 500 }}</span>
+            </div>
+            <div class="price-row">
+              <span>Delivery Charges</span>
+              <span class="green text-uppercase">Free</span>
+            </div>
+            <div class="price-row total">
+              <span>Total Amount</span>
+              <span>₹{{ totalPrice }}</span>
+            </div>
+          </div>
+          <div class="savings-info">
+            You will save ₹{{ cartItems.length * 500 }} on this order
+          </div>
+        </div>
+
+        <div class="mt-4 p-3 bg-white border rounded d-flex align-items-center justify-content-center text-muted"
+          style="font-size: 0.85rem;">
+          <span class="me-2">🛡️</span> Safe and Secure Payments. 100% Authentic products.
         </div>
       </div>
     </div>

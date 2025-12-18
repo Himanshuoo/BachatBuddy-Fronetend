@@ -11,6 +11,8 @@ import { of } from 'rxjs';
 })
 export class OrdersComponent implements OnInit {
   orders: any[] = [];
+  filteredOrders: any[] = [];
+  searchTerm: string = '';
   loading = true;
   error: string | null = null;
   userName: string = '';
@@ -50,7 +52,26 @@ export class OrdersComponent implements OnInit {
 
     this.ordersService.getOrders(uid).subscribe({
       next: (data) => {
-        this.orders = data || [];
+        // Ensure total and savings are numeric and reconstruct if zero
+        this.orders = (data || []).map(o => {
+          let total = Number(o.total || 0);
+          let savings = Number(o.savings || 0);
+          const items = o.items || [];
+
+          // Self-healing: If total is zero but items exist, calculate it
+          if (total === 0 && items.length > 0) {
+            total = items.reduce((sum: number, item: any) => sum + (Number(item.price || 0) * Number(item.qty || 1)), 0);
+          }
+
+          return {
+            ...o,
+            total: total,
+            savings: savings,
+            items: items,
+            originalPrice: Number(o.originalPrice || total + savings)
+          };
+        });
+        this.filteredOrders = [...this.orders];
         this.loading = false;
       },
       error: (err) => {
@@ -59,42 +80,19 @@ export class OrdersComponent implements OnInit {
         console.error('Order fetch error:', err);
       }
     });
+  }
 
-    // Dummy group deal for visualization
-    const dummyDeals: GroupDeal[] = [
-      {
-        id: 1,
-        productName: 'Wireless Earbuds',
-        originalPrice: 2999,
-        discountedPrice: 1999,
-        maxParticipants: 5,
-        currentParticipants: 3,
-        status: 'OPEN'
-      },
-      {
-        id: 2,
-        pimage: 'assets/earbuds.jpg',
-        productName: 'Bluetooth Earbuds',
-        originalPrice: 1999,
-        discountedPrice: 1599,
-        maxParticipants: 5,
-        currentParticipants: 3,
-        status: 'OPEN'
-      },
-      {
-        id: 3,
-        pimage: 'assets/ricebag.jpg',
-        productName: '5kg Premium Rice',
-        originalPrice: 450,
-        discountedPrice: 360,
-        currentParticipants: 10,
-        maxParticipants: 10,
-        status: 'Closed'
-      }
-
-
-    ];
-    this.groupDeals = dummyDeals;
+  filterOrders(): void {
+    if (!this.searchTerm.trim()) {
+      this.filteredOrders = [...this.orders];
+    } else {
+      const term = this.searchTerm.toLowerCase().trim();
+      this.filteredOrders = this.orders.filter(order =>
+        order.productName?.toLowerCase().includes(term) ||
+        order.status?.toLowerCase().includes(term) ||
+        order.shippingAddress?.city?.toLowerCase().includes(term)
+      );
+    }
   }
 
   joinDeal(dealId: number): void {

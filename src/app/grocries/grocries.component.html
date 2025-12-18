@@ -24,11 +24,7 @@
       <span class="category-tag">{{ item.category }}</span>
 
       <!-- Product Image -->
-      <img
-        [src]="item.productImage"
-        loading="lazy"
-        [alt]="item.productName"
-      />
+      <img [src]="item.productImage" loading="lazy" [alt]="item.productName" />
 
       <h4 class="product-title">{{ item.productName }}</h4>
 
@@ -43,15 +39,11 @@
 
       <!-- Progress Bar -->
       <div class="progress-container">
-        <div
-          class="progress-bar"
-          [style.width.%]="item.progressPercentage"
-          [ngClass]="{
+        <div class="progress-bar" [style.width.%]="item.progressPercentage" [ngClass]="{
             'low': item.progressPercentage < 40,
             'mid': item.progressPercentage >= 40 && item.progressPercentage < 80,
             'high': item.progressPercentage >= 80
-          }"
-        ></div>
+          }"></div>
       </div>
 
       <p class="joined-info">
@@ -61,11 +53,7 @@
       <p class="viewing-now">👀 {{ item.viewingNow }} viewing now</p>
 
       <!-- Buttons -->
-      <button
-        class="btn-primary"
-        (click)="joinGroup(item.id)"
-        [disabled]="item.hasUserJoined || item.isGroupComplete"
-      >
+      <button class="btn-primary" (click)="joinGroup(item)" [disabled]="item.isGroupComplete">
         {{ item.hasUserJoined ? 'Already Joined' : item.isGroupComplete ? 'Group Full' : 'Join Group' }}
       </button>
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CartItem, CartService } from '../services/cart.service';
 import Swal from 'sweetalert2';
+import { OnlineserviceService } from '../onlineservice.service';
 
 @Component({
   selector: 'app-products',
@@ -9,43 +10,21 @@ import Swal from 'sweetalert2';
   styleUrls: ['./products.component.css']
 })
 export class ProductsComponent implements OnInit {
-  prod: any[] = [
-    {
-      pid: 1,
-      pname: 'Bluetooth Earbuds',
-      pimage: 'assets/images/earbuds.png',
-      price: 1999,
-      qty: 20,
-      category: 'Electronics',
-      shortDesc: 'Crystal-clear sound and fast charging.'
-    },
-    {
-      pid: 2,
-      pname: 'Wedding Saree',
-      pimage: 'assets/images/saree.png',
-      price: 2999,
-      qty: 15,
-      category: 'Wedding Bazar',
-      shortDesc: 'Elegant silk saree for special occasions.'
-    },
-    {
-      pid: 3,
-      pname: 'Organic Rice',
-      pimage: 'assets/images/rice.png',
-      price: 499,
-      qty: 50,
-      category: 'Groceries',
-      shortDesc: 'Premium quality long-grain organic rice.'
-    }
-  ];
-
+  prod: any[] = [];
   categories = ['All', 'Groceries', 'Electronics', 'Fashion', 'Beauty', 'Wedding Bazar', 'Gifts'];
   selectedCategory = 'All';
-  filteredProducts = this.prod;
+  filteredProducts: any[] = [];
 
-  constructor(private router: Router, private CartService: CartService) {}
+  constructor(
+    private router: Router,
+    private cartService: CartService,
+    private onlineService: OnlineserviceService
+  ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.prod = this.onlineService.getProducts();
+    this.filteredProducts = this.prod;
+  }
 
   filterByCategory(cat: string) {
     this.selectedCategory = cat;
@@ -53,7 +32,7 @@ export class ProductsComponent implements OnInit {
   }
 
   addToCart(item: any) {
-    this.CartService.addToCart({
+    this.cartService.addToCart({
       pid: item.pid,
       pname: item.pname,
       price: item.price,
@@ -73,11 +52,12 @@ export class ProductsComponent implements OnInit {
     });
   }
 
-  viewDetails(pid: number) {
+  viewDetails(pid: any) {
+    // Navigate using ID as a route parameter
     this.router.navigate(['/product-detail', pid]);
   }
 
-  buyNow(pid: number) {
+  buyNow(pid: any) {
     this.router.navigate(['/buy', pid]);
   }
 }

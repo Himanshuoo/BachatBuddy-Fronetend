@@ -40,4 +40,12 @@ export class CartService {
     this.cartItems = [];
     this.cartSubject.next(this.cartItems);
   }
+
+  updateQuantity(pid: number, qty: number) {
+    const item = this.cartItems.find(i => i.pid === pid);
+    if (item) {
+      item.qty = qty;
+      this.cartSubject.next([...this.cartItems]);
+    }
+  }
 }

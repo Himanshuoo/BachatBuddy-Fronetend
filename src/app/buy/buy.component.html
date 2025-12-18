@@ -30,15 +30,15 @@
     </div>
 
     <!-- Step 3 -->
-    <div class="card-section" *ngIf="product">
+    <div class="card-section" *ngIf="cartItems.length > 0">
       <h3>3. ORDER SUMMARY</h3>
-      <div class="order-item">
-        <img [src]="product.pimage" alt="{{ product.pname }}" />
+      <div class="order-item" *ngFor="let item of cartItems">
+        <img [src]="item.pimage" [alt]="item.pname" />
         <div class="order-info">
-          <h4>{{ product.pname }}</h4>
-          <p>Qty: 1</p>
-          <p>Price: ₹{{ product.price }}</p>
-          <p class="saving">You Save ₹{{ totalSavings }}</p>
+          <h4>{{ item.pname }}</h4>
+          <p>Qty: {{ item.qty }}</p>
+          <p>Price: ₹{{ item.price }}</p>
+          <p class="saving" *ngIf="!isCartPurchase">You Save ₹{{ totalSavings }}</p>
         </div>
       </div>
     </div>
@@ -74,12 +74,37 @@
   </app-payment-dialog>
 
   <!-- RIGHT SIDE -->
-  <div class="right-section" *ngIf="product">
+  <div class="right-section" *ngIf="product || cartItems.length > 0">
     <div class="price-box">
       <h3>PRICE DETAILS</h3>
+
+      <!-- Mini Item Summary -->
+      <div class="mini-items-summary">
+        <!-- For Cart Purchase -->
+        <ng-container *ngIf="isCartPurchase">
+          <div class="mini-item-row" *ngFor="let item of cartItems">
+            <img [src]="item.pimage" class="mini-item-img">
+            <div class="mini-item-info">
+              <span class="mini-item-name">{{ item.pname }}</span>
+              <span class="mini-item-qty">Qty: {{ item.qty }}</span>
+            </div>
+            <span class="mini-item-price fw-bold small">₹{{ item.price * item.qty }}</span>
+          </div>
+        </ng-container>
+        <!-- For Single Purchase -->
+        <div class="mini-item-row" *ngIf="!isCartPurchase && product">
+          <img [src]="product.pimage" class="mini-item-img">
+          <div class="mini-item-info">
+            <span class="mini-item-name">{{ product.pname }}</span>
+            <span class="mini-item-qty">Qty: {{ quantity }}</span>
+          </div>
+          <span class="mini-item-price fw-bold small">₹{{ totalPrice }}</span>
+        </div>
+      </div>
+
       <div class="price-row">
-        <span>Price (1 item)</span>
-        <span>₹{{ product.price }}</span>
+        <span>Price ({{ totalItems }} item{{ totalItems > 1 ? 's' : '' }})</span>
+        <span>₹{{ totalPrice + totalSavings }}</span>
       </div>
       <div class="price-row">
         <span>Discount</span>

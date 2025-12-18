@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   padding: 20px 40px;
-  background-color: #f1f3f6;
+  background-color: #fffef5;
   font-family: "Segoe UI", sans-serif;
 }
 
@@ -17,7 +17,7 @@
   background: #fff;
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   height: fit-content;
 }
 
@@ -26,7 +26,7 @@
   border-radius: 10px;
   padding: 20px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .card-section h3 {
@@ -156,4 +156,68 @@
   margin-top: 10px;
   color: green;
   font-weight: 600;
+}
+
+/* Mini Item Summary in Price Details */
+.mini-items-summary {
+  padding: 10px 0;
+  border-bottom: 1px dashed #ddd;
+  margin-bottom: 10px;
+}
+
+.mini-item-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.mini-item-row:last-child {
+  margin-bottom: 0;
+}
+
+.mini-item-img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  border: 1px solid #f0f0f0;
+  border-radius: 4px;
+}
+
+.mini-item-info {
+  flex: 1;
+}
+
+.mini-item-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #212121;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+.mini-item-qty {
+  font-size: 0.8rem;
+  color: #878787;
+}
+
+@media (max-width: 768px) {
+  .checkout-page {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .left-section,
+  .right-section {
+    width: 100%;
+  }
+
+  .right-section {
+    position: relative;
+    top: 0;
+    margin-top: 20px;
+  }
 }

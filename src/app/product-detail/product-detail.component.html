@@ -1,103 +1,194 @@
-<div class="container py-5" *ngIf="product">
-  <div class="row">
-    <!-- Product Image -->
-    <div class="col-md-5 text-center">
-      <img
-        [src]="product.pimage"
-        class="img-fluid rounded shadow-sm"
-        alt="{{ product.pname }}"
-        style="max-height: 400px; object-fit: contain;"
-      />
-    </div>
+<div class="product-detail-wrapper py-4" *ngIf="product">
+  <div class="container bg-white shadow-sm p-4 rounded">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb" style="font-size: 0.85rem;">
+        <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted">Home</a></li>
+        <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted">{{ product.category }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ product.pname }}</li>
+      </ol>
+    </nav>
 
-    <!-- Product Info -->
-    <div class="col-md-7">
-      <h3 class="fw-bold">{{ product.pname }}</h3>
-      <p class="text-muted">{{ product.category }}</p>
+    <div class="row">
+      <!-- Left Column: Sticky Image & Actions -->
+      <div class="col-md-5">
+        <div class="sticky-image-panel text-center">
+          <img [src]="product.pimage" class="main-product-img mb-4" [alt]="product.pname">
 
-      <div class="d-flex align-items-center mb-3">
-        <h4 class="text-success mb-0">
-          {{ product.price | discount:30 | currency:'INR' }}
-        </h4>
-        <span class="text-muted ms-2 text-decoration-line-through">
-          {{ product.price | currency:'INR' }}
-        </span>
-        <span class="badge bg-success ms-3">30% OFF</span>
-      </div>
-
-      <p class="text-secondary">{{ product.description }}</p>
-
-      <p>
-        <strong>Stock:</strong>
-        <span
-          [class.text-success]="product.qty > 0"
-          [class.text-danger]="product.qty === 0"
-        >
-          {{ product.qty > 0 ? 'Available' : 'Out of Stock' }}
-        </span>
-      </p>
-
-      <!-- Group Deal Section -->
-      <div class="alert alert-success py-2">
-        🎉 <strong>Group Deal Active!</strong> 7 joined / 10 needed
-        <div class="progress mt-1" style="height: 6px;">
-          <div class="progress-bar bg-success" style="width: 70%;"></div>
+          <!-- Main Actions -->
+          <div class="row g-2 mt-2">
+            <div class="col-6">
+              <button class="btn btn-flipkart-cart" (click)="addToCart(product)">
+                🛒 Add to Cart
+              </button>
+            </div>
+            <div class="col-6">
+              <button class="btn btn-flipkart-buy" (click)="buyNow(product)">
+                ⚡ {{ isGroupDeal ? 'Join Group' : 'Buy Now' }}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Action Buttons -->
-      <div class="d-flex gap-3 mt-3">
-        <button class="btn btn-outline-primary w-50" (click)="addToCart(product)">
-          🛒 Add to Cart
-        </button>
-        <button class="btn btn-primary w-50" (click)="buyNow(product)">
-          ⚡ Buy Now
-        </button>
+      <!-- Right Column: Details -->
+      <div class="col-md-7 ps-md-5">
+        <h1 class="product-title mb-1">{{ product.pname }}</h1>
+
+        <!-- Ratings Badge -->
+        <div class="d-flex align-items-center mb-3">
+          <span class="rating-pill me-2">4.4 ★</span>
+          <span class="text-muted fw-500" style="font-size: 0.9rem;">2,456 Ratings & 189 Reviews</span>
+          <img src="assets/images/f-assured.png" alt="Assured" class="ms-3" style="height: 20px;"
+            onerror="this.style.display='none'">
+        </div>
+
+        <!-- Price Section -->
+        <div class="price-section mb-4">
+          <div class="d-flex align-items-center gap-3">
+            <span class="current-price">{{ product.price | currency:'INR' }}</span>
+            <span class="original-price" *ngIf="product.originalPrice > product.price">
+              {{ product.originalPrice | currency:'INR' }}
+            </span>
+            <span class="discount-badge" *ngIf="product.originalPrice > product.price">
+              {{ ((product.originalPrice - product.price) / product.originalPrice * 100) | number:'1.0-0' }}% off
+            </span>
+          </div>
+          <small class="text-success fw-bold" style="font-size: 0.8rem;">+ ₹29 Secured Packaging Fee</small>
+
+          <!-- Dynamic Total Price for Multi-Quantity -->
+          <div class="mt-2" *ngIf="selectedQuantity > 1">
+            <span class="badge bg-light text-dark border p-2">
+              Total: <strong>{{ product.price * selectedQuantity | currency:'INR' }}</strong> ({{ selectedQuantity }}
+              items)
+            </span>
+          </div>
+        </div>
+
+        <!-- Quantity Selector -->
+        <div class="quantity-selector d-flex align-items-center mb-4">
+          <span class="fw-bold me-3">Quantity:</span>
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-outline-secondary border-end-0 px-3" (click)="decrementQuantity()"
+              [disabled]="selectedQuantity <= 1">−</button>
+            <div class="border d-flex align-items-center px-4 bg-white fw-bold">{{ selectedQuantity }}</div>
+            <button type="button" class="btn btn-outline-secondary border-start-0 px-3" (click)="incrementQuantity()"
+              [disabled]="selectedQuantity >= 10">+</button>
+          </div>
+        </div>
+
+        <!-- Available Offers -->
+        <div class="offers-section mb-4">
+          <h5 class="fw-bold mb-3" style="font-size: 1rem;">Available Offers</h5>
+          <div class="offer-item" *ngFor="let offer of bankOffers">
+            <span class="offer-icon">🏷️</span>
+            <span>{{ offer }}</span>
+          </div>
+        </div>
+
+        <!-- Group Deal Alert (Conditional) -->
+        <div class="group-deal-box alert alert-success d-flex align-items-center p-3 mb-4" *ngIf="isGroupDeal">
+          <div class="flex-grow-1">
+            <strong class="d-block mb-1">🔥 Bachat Group Deal Active!</strong>
+            <div class="progress mb-2" style="height: 8px;">
+              <div class="progress-bar bg-success progress-bar-striped progress-bar-animated"
+                [style.width.%]="product.progressPercentage"></div>
+            </div>
+            <span style="font-size: 0.85rem;">{{ product.currentJoined }} joined / {{ product.totalNeeded }} needed to
+              unlock target savings!</span>
+          </div>
+          <div class="ms-3 text-center">
+            <span class="badge bg-white text-success p-2">SAVES ₹{{ product.originalPrice - product.price }}</span>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="description-section mb-4">
+          <h5 class="section-header">Product Description</h5>
+          <p class="text-secondary" style="line-height: 1.6;">{{ product.description }}</p>
+        </div>
+
+        <!-- Highlights -->
+        <div class="highlights-section mb-4">
+          <h5 class="section-header">Product Highlights</h5>
+          <ul class="row list-unstyled">
+            <li class="col-md-6 mb-2 text-secondary" *ngFor="let h of highlights">
+              • {{ h }}
+            </li>
+          </ul>
+        </div>
+
+        <!-- Specifications -->
+        <div class="spec-section mb-4">
+          <h5 class="section-header">Specifications</h5>
+          <div class="table-responsive">
+            <table class="table spec-table">
+              <tbody>
+                <tr *ngFor="let spec of specifications">
+                  <th>{{ spec.key }}</th>
+                  <td>{{ spec.value }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Ratings & Reviews Split -->
+        <div class="reviews-overhaul py-4 border-top">
+          <h5 class="section-header">Ratings & Reviews</h5>
+          <div class="row align-items-center">
+            <div class="col-md-4 text-center border-end">
+              <h2 class="fw-bold mb-0">4.4 ★</h2>
+              <p class="text-muted small">2,456 Ratings &<br>189 Reviews</p>
+            </div>
+            <div class="col-md-8">
+              <div class="d-flex align-items-center mb-1" *ngFor="let dist of ratingsDistribution">
+                <span class="small fw-500" style="width: 30px;">{{ dist.stars }}★</span>
+                <div class="rating-bar-container">
+                  <div class="rating-bar" [style.width.%]="dist.percentage"></div>
+                </div>
+                <span class="text-muted small" style="width: 60px;">{{ dist.count }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Individual Reviews -->
+          <div class="mt-4">
+            <div class="p-3 border-bottom" *ngFor="let r of reviews">
+              <div class="d-flex align-items-center mb-2">
+                <span class="badge bg-success me-2">{{ r.rating }} ★</span>
+                <span class="fw-bold">{{ r.comment }}</span>
+              </div>
+              <p class="text-muted small mb-1">Reviewed by <strong>{{ r.user }}</strong> on {{ r.date }}</p>
+              <div class="d-flex align-items-center text-success small">
+                <span class="me-2">✔️ Certified Buyer</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
-  </div>
 
-  <!-- Reviews Section -->
-  <hr class="my-5" />
-  <div>
-    <h4 class="mb-3">⭐ Customer Reviews</h4>
-    <div *ngFor="let r of reviews" class="mb-3 border-bottom pb-2">
-      <div class="d-flex align-items-center mb-1">
-        <span class="fw-bold me-2">{{ r.user }}</span>
-        <span class="badge bg-warning text-dark">{{ r.rating }} ★</span>
-      </div>
-      <p class="mb-1">{{ r.comment }}</p>
-      <small class="text-muted">— {{ r.date }}</small>
-    </div>
-  </div>
-
-  <!-- Related Products -->
-  <hr class="my-5" />
-  <div>
-    <h4 class="mb-4">🛍️ You may also like</h4>
-    <div class="row g-3">
-      <div class="col-md-3" *ngFor="let item of relatedProducts">
-        <div class="card shadow-sm border-0 h-100">
-          <img
-            [src]="item.pimage"
-            class="card-img-top p-2"
-            alt="{{ item.pname }}"
-            style="height: 150px; object-fit: contain;"
-          />
-          <div class="card-body text-center">
-            <p class="fw-bold mb-1">{{ item.pname }}</p>
-            <p class="text-success mb-2">
-              {{ item.price | discount:30 | currency:'INR' }}
-            </p>
-            <button
-              class="btn btn-sm btn-outline-primary"
-              (click)="viewProduct(item.pid)"
-            >
-              View
-            </button>
+    <!-- Related Products -->
+    <div class="related-section mt-5 border-top pt-5">
+      <h5 class="section-header">🛍️ Customers Who Viewed This Also Viewed</h5>
+      <div class="row g-4">
+        <div class="col-md-3" *ngFor="let item of relatedProducts">
+          <div class="card h-100 border-0 shadow-hover" (click)="viewProduct(item.pid)" style="cursor: pointer;">
+            <img [src]="item.pimage" class="card-img-top p-4" style="height: 200px; object-fit: contain;">
+            <div class="card-body">
+              <p class="mb-1 text-truncate fw-500">{{ item.pname }}</p>
+              <div class="d-flex align-items-center">
+                <span class="fw-bold me-2">{{ item.price | currency:'INR' }}</span>
+                <img src="assets/images/f-assured.png" style="height: 15px;" onerror="this.style.display='none'">
+              </div>
+              <small class="text-success fw-bold">Free delivery</small>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
   </div>
 </div>

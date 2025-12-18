@@ -94,7 +94,7 @@ export class GrocriesComponent implements OnInit {
   /**
    * ✅ Join Group Logic
    */
-  joinGroup(productId: number): void {
+  joinGroup(product: GroupBuyingProduct): void {
     const userId = sessionStorage.getItem('uid');
 
     if (!userId) {
@@ -102,26 +102,22 @@ export class GrocriesComponent implements OnInit {
       return;
     }
 
-    this.groupBuyingService.joinGroupByIds(Number(userId), productId).subscribe({
-      next: (response) => {
-        alert(response.message);
-        if (response.success) {
-          // Redirect to Buy page with product ID and type
-          this.router.navigate(['/buy', productId], { queryParams: { type: 'group' } });
-        }
-      },
-      error: (err) => {
-        console.error('Error joining group:', err);
-        alert('Failed to join group. Please try again.');
+    if (product.hasUserJoined) {
+      if (!confirm('You have already joined this group. Do you want to join again?')) {
+        alert('You have already added to this group');
+        return;
       }
-    });
+    }
+
+    // Standard flow: Navigate to Buy page with group type
+    this.router.navigate(['/buy', product.id], { queryParams: { type: 'group' } });
   }
 
   /**
    * ✅ Navigate to deal details
    */
   openDeal(productId: number): void {
-    this.router.navigate(['/group-buy', productId]);
+    this.router.navigate(['/product-detail', productId], { queryParams: { type: 'group' } });
   }
 
   /**

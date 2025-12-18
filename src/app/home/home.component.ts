@@ -47,6 +47,7 @@ export class HomeComponent implements OnInit {
 
     if (product.hasUserJoined) {
       if (!confirm('You have already joined this group. Do you want to join again?')) {
+        alert('You have already added to this group');
         return;
       }
     }

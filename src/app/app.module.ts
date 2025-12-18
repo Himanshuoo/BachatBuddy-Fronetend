@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { BuyComponent } from './buy/buy.component';
@@ -48,7 +49,8 @@ import { PaymentDialogComponent } from './payment-dialog/payment-dialog.componen
     FashionsComponent,
 
     BeautyComponent,
-    PaymentDialogComponent
+    PaymentDialogComponent,
+    ProductDetailComponent
   ],
   imports: [
     BrowserModule,
