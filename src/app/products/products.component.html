@@ -3,24 +3,18 @@
 
   <!-- Category Filter -->
   <div class="d-flex justify-content-center mb-4 flex-wrap gap-2">
-    <button
-      *ngFor="let cat of categories"
-      class="btn"
-      [ngClass]="selectedCategory === cat ? 'btn-primary' : 'btn-outline-primary'"
-      (click)="filterByCategory(cat)"
-    >
+    <button *ngFor="let cat of categories" class="btn"
+      [ngClass]="selectedCategory === cat ? 'btn-primary' : 'btn-outline-primary'" (click)="filterByCategory(cat)">
       {{ cat }}
     </button>
   </div>
 
   <!-- Products -->
-  <div class="row g-4">
-    <div class="col-md-4 col-sm-6" *ngFor="let i of filteredProducts">
-      <div class="card h-100 shadow border-0 hover-shadow" 
-           (click)="viewDetails(i.pid)" 
-           style="cursor: pointer;">
+  <div class="product-grid">
+    <div class="card-wrapper" *ngFor="let i of filteredProducts">
+      <div class="card h-100 shadow border-0 hover-shadow" (click)="viewDetails(i.pid)" style="cursor: pointer;">
         <div class="position-relative">
-          <img [src]="i.pimage" class="card-img-top p-3 rounded" alt="{{ i.pname }}" style="height: 220px; object-fit: contain;" />
+          <img [src]="i.pimage" class="card-img-top p-3 rounded" alt="{{ i.pname }}" />
           <span class="badge bg-success position-absolute top-0 start-0 m-2">{{ i.category }}</span>
         </div>
         <div class="card-body">

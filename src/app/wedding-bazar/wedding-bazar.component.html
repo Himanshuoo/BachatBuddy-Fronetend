@@ -2,8 +2,8 @@
   <h1 class="main-title">💍 Wedding Bazar</h1>
   <p class="subtitle">🎊 Buy together & save more on wedding essentials across India 🇮🇳</p>
 
-  <div class="row g-4">
-    <div class="col-md-4" *ngFor="let item of weddingDeals">
+  <div class="wedding-grid">
+    <div class="card-wrapper" *ngFor="let item of weddingDeals">
       <div class="card wedding-card shadow">
         <img [src]="item.image" class="card-img-top" [alt]="item.name" />
         <div class="card-body">
@@ -17,7 +17,8 @@
           <div class="alert alert-warning py-1 px-2 mb-2 text-center">
             🤝 Group Deal: {{ item.joined }}/{{ item.needed }} joined
             <div class="progress mt-1" style="height: 6px;">
-              <div class="progress-bar bg-warning" role="progressbar" [style.width.%]="(item.joined / item.needed) * 100"></div>
+              <div class="progress-bar bg-warning" role="progressbar"
+                [style.width.%]="(item.joined / item.needed) * 100"></div>
             </div>
           </div>
 
