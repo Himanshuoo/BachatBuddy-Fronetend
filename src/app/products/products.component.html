@@ -1,45 +1,35 @@
-<div class="container py-4">
-  <h2 class="text-center mb-4">🛒 Explore Products with Group Deals</h2>
+<div class="gifts-container">
+  <div class="gifts-header">
+    <h1>🤵 Wedding Bazaar</h1>
+    <p>Premium collection for your special day</p>
+  </div>
 
-  <!-- Category Filter -->
-  <div class="d-flex justify-content-center mb-4 flex-wrap gap-2">
-    <button *ngFor="let cat of categories" class="btn"
-      [ngClass]="selectedCategory === cat ? 'btn-primary' : 'btn-outline-primary'" (click)="filterByCategory(cat)">
+  <!-- Category Filter Bar -->
+  <div class="filter-bar shadow-sm">
+    <button *ngFor="let cat of categories" (click)="filterByCategory(cat)" [class.active]="selectedCategory === cat"
+      class="filter-btn">
       {{ cat }}
     </button>
   </div>
 
-  <!-- Products -->
-  <div class="product-grid">
-    <div class="card-wrapper" *ngFor="let i of filteredProducts">
-      <div class="card h-100 shadow border-0 hover-shadow" (click)="viewDetails(i.pid)" style="cursor: pointer;">
-        <div class="position-relative">
-          <img [src]="i.pimage" class="card-img-top p-3 rounded" alt="{{ i.pname }}" />
-          <span class="badge bg-success position-absolute top-0 start-0 m-2">{{ i.category }}</span>
+  <!-- Products Grid -->
+  <div class="gifts-grid">
+    <div class="gift-card shadow-sm" *ngFor="let item of filteredProducts">
+      <div class="card-image">
+        <img [src]="item.pimage" [alt]="item.pname" (click)="viewDetails(item.pid)">
+        <span class="category-badge">{{ item.category }}</span>
+      </div>
+      <div class="card-body">
+        <h4 (click)="viewDetails(item.pid)">{{ item.pname }}</h4>
+        <p class="description">{{ item.description || 'Premium quality product selected for perfection and style.' }}
+        </p>
+        <div class="price-row">
+          <span class="price">₹{{ item.price }}</span>
+          <span class="stock" *ngIf="item.qty > 0">In Stock</span>
         </div>
-        <div class="card-body">
-          <h5 class="card-title fw-bold">{{ i.pname }}</h5>
-          <p class="card-text text-muted small mb-2">{{ i.shortDesc }}</p>
-          <p class="mb-2">
-            <span class="text-decoration-line-through">{{ i.price | currency:'INR' }}</span>
-            <span class="fw-bold text-success ms-2">{{ i.price | discount:30 | currency:'INR' }}</span>
-          </p>
-
-          <div class="bg-light p-2 rounded mb-2">
-            🎉 <strong>Group Deal:</strong> 7 joined / 10 needed
-            <div class="progress mt-1" style="height: 6px;">
-              <div class="progress-bar bg-success" style="width: 70%;"></div>
-            </div>
-          </div>
-
-          <div class="d-flex justify-content-between" (click)="$event.stopPropagation()">
-            <button class="btn btn-outline-secondary w-50 me-1" (click)="addToCart(i)">
-              🛒 Add to Cart
-            </button>
-            <button class="btn btn-primary w-50" (click)="buyNow(i.pid)">
-              🛍️ Buy Now
-            </button>
-          </div>
+        <div class="action-buttons">
+          <button class="btn-detail" (click)="viewDetails(item.pid)">View Details</button>
+          <button class="btn-buy" (click)="buyNow(item.pid)">Buy Now</button>
         </div>
       </div>
     </div>

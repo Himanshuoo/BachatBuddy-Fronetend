@@ -1,0 +1,44 @@
+<div class="gifts-container">
+    <div class="gifts-header">
+        <h1>🎁 Gift Store</h1>
+        <p>Find the perfect gift for your loved ones</p>
+    </div>
+
+    <!-- Category Filter Bar -->
+    <div class="filter-bar shadow-sm">
+        <button *ngFor="let cat of categories" (click)="filterGifts(cat)" [class.active]="selectedCategory === cat"
+            class="filter-btn">
+            {{ cat }}
+        </button>
+    </div>
+
+    <!-- Gifts Grid -->
+    <div class="gifts-grid" *ngIf="filteredGifts.length > 0; else noGifts">
+        <div class="gift-card shadow-sm" *ngFor="let item of filteredGifts">
+            <div class="card-image">
+                <img [src]="item.pimage" [alt]="item.pname" (click)="viewDetails(item.pid)">
+                <span class="category-badge">{{ item.category }}</span>
+            </div>
+            <div class="card-body">
+                <h4 (click)="viewDetails(item.pid)">{{ item.pname }}</h4>
+                <p class="description">{{ item.description }}</p>
+                <div class="price-row">
+                    <span class="price">₹{{ item.price }}</span>
+                    <span class="stock" *ngIf="item.qty > 0">In Stock</span>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn-detail" (click)="viewDetails(item.pid)">View Details</button>
+                    <button class="btn-buy" (click)="buyNow(item.pid)">Buy Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #noGifts>
+        <div class="empty-state">
+            <div class="empty-icon">🎁</div>
+            <h3>No gifts found</h3>
+            <p>Try selecting a different category.</p>
+        </div>
+    </ng-template>
+</div>

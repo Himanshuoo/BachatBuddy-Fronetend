@@ -28,6 +28,8 @@ import { OrdersComponent } from './orders/orders.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { PaymentDialogComponent } from './payment-dialog/payment-dialog.component';
+import { AssistantComponent } from './assistant/assistant.component';
+import { GiftsComponent } from './gifts/gifts.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +52,9 @@ import { PaymentDialogComponent } from './payment-dialog/payment-dialog.componen
 
     BeautyComponent,
     PaymentDialogComponent,
-    ProductDetailComponent
+    ProductDetailComponent,
+    AssistantComponent,
+    GiftsComponent
   ],
   imports: [
     BrowserModule,

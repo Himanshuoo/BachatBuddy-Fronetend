@@ -1,4 +1,4 @@
-<div class="home-wrapper">
+<div class="gifts-container home-wrapper">
 
   <!-- Hero Section -->
   <section class="hero-section">
@@ -10,24 +10,23 @@
     <div class="hero-image-emoji" aria-label="Shopping together" role="img">
       <span class="emoji">🛍️🛒👫</span>
     </div>
-
   </section>
 
   <!-- How It Works Section -->
   <section class="how-it-works">
     <h2>📦 How It Works</h2>
     <div class="steps">
-      <div class="step">
+      <div class="step shadow-sm">
         <div class="icon">🔎</div>
         <h4>Browse Products</h4>
         <p>Explore top electronics, groceries, fashion & more at the best prices.</p>
       </div>
-      <div class="step">
+      <div class="step shadow-sm">
         <div class="icon">👥</div>
         <h4>Join a Group</h4>
         <p>Join others to unlock lower prices through group buying.</p>
       </div>
-      <div class="step">
+      <div class="step shadow-sm">
         <div class="icon">💰</div>
         <h4>Save Big!</h4>
         <p>The more people join, the lower the price. You save more, together!</p>
@@ -35,14 +34,16 @@
     </div>
   </section>
 
-
-  <!-- Popular Group Deals -->
+  <!-- Popular Group Deals (Standardized to Gifts Style) -->
   <section class="group-deals">
-    <h2>🔥 Popular Group Deals</h2>
+    <div class="gifts-header">
+      <h2>🔥 Popular Group Deals</h2>
+      <p>Grab these hot items before the groups are full!</p>
+    </div>
 
     <!-- Loading State -->
-    <div *ngIf="loading" class="loading-message">
-      <p>Loading amazing deals... 🛍️</p>
+    <div *ngIf="loading" class="skeleton-grid">
+      <div class="skeleton-card" *ngFor="let i of [1,2,3,4]"></div>
     </div>
 
     <!-- Error State -->
@@ -50,28 +51,47 @@
       <p>{{ error }}</p>
     </div>
 
-    <!-- Products Grid -->
-    <div class="deal-cards" *ngIf="!loading && !error">
-      <div class="deal-card" *ngFor="let item of popularProducts">
-        <img [src]="item.productImage" [alt]="item.productName" />
-        <h4>{{ item.productName }}</h4>
-        <p>
-          <del>₹{{ item.originalPrice }}</del>
-          <strong>₹{{ item.groupPrice }} (Group Price)</strong>
-        </p>
-        <div class="progress-bar-container">
-          <div class="progress-bar" [style.width.%]="item.progressPercentage"></div>
+    <!-- Products Grid (Gifts Style) -->
+    <div class="gifts-grid" *ngIf="!loading && !error">
+      <div class="gift-card shadow-sm" *ngFor="let item of popularProducts">
+        <span class="badge-savings">Save ₹{{ item.originalPrice - item.groupPrice }}</span>
+
+        <div class="card-image">
+          <img [src]="item.productImage" [alt]="item.productName" (click)="joinGroup(item)">
+          <span class="category-badge">{{ item.category || 'Deal' }}</span>
         </div>
-        <p>{{ item.currentJoined }} joined / {{ item.totalNeeded }} needed</p>
-        <button class="btn-join" (click)="joinGroup(item)" [disabled]="item.isGroupComplete">
-          {{ item.hasUserJoined ? 'Already Joined' : item.isGroupComplete ? 'Group Full' : 'Join Group' }}
-        </button>
+
+        <div class="card-body">
+          <h4 (click)="joinGroup(item)">{{ item.productName }}</h4>
+          <p class="description">{{ item.description || 'Join this group and save big on this amazing product!' }}</p>
+
+          <div class="price-row">
+            <span class="price">₹{{ item.groupPrice }}</span>
+            <span class="original-price">₹{{ item.originalPrice }}</span>
+          </div>
+
+          <div class="progress-section">
+            <div class="progress-container">
+              <div class="progress-bar-inner" [style.width.%]="item.progressPercentage"></div>
+            </div>
+            <div class="joined-info">
+              <span>👥 {{ item.currentJoined }}/{{ item.totalNeeded }}</span>
+              <span class="viewing-now pulse">👀 {{ item.viewingNow || 5 }}</span>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button class="btn-buy" (click)="joinGroup(item)" [disabled]="item.isGroupComplete">
+              {{ item.hasUserJoined ? 'Already Joined' : item.isGroupComplete ? 'Group Full' : 'Join Group' }}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Ask Buddy CTA -->
-  <section class="ask-buddy-cta">
+  <section class="ask-buddy-cta shadow-sm">
     <h3>💬 Need help choosing?</h3>
     <p><strong>Ask Buddy</strong> to find the best deals for your needs!</p>
     <a routerLink="/assistant" class="btn-outline">Ask Buddy Now</a>

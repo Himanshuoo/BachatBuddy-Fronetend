@@ -116,7 +116,8 @@ export class GrocriesComponent implements OnInit {
   /**
    * ✅ Navigate to deal details
    */
-  openDeal(productId: number): void {
+  openDeal(item: any): void {
+    const productId = typeof item === 'object' ? item.id : item;
     this.router.navigate(['/product-detail', productId], { queryParams: { type: 'group' } });
   }
 

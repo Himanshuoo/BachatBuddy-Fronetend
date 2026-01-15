@@ -1,0 +1,74 @@
+﻿node.exe : - Building...
+At C:\Users\iamhi\AppData\Roaming\npm\ng.ps1:24 
+char:5
++     & "node$exe"  
+"$basedir/node_modules/@angular/cli/bin/ng.js" $arg 
+...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (- Bu   
+ ilding...:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+Application bundle generation failed. [15.178 seconds]
+
+X [ERROR] NG5: Argument of type 
+'GroupBuyingProduct' is not assignable to parameter 
+of type 'number'. [plugin angular-compiler]
+
+    src/app/grocries/grocries.component.html:25:86:
+      25 Γöé ...productImage" 
+alt="{{item.productName}}" (click)="openDeal(item)">
+         Γò╡                                        
+                       ~~~~
+
+  Error occurs in the template of component 
+GrocriesComponent.
+
+    src/app/grocries/grocries.component.ts:8:15:
+      8 Γöé   templateUrl: 
+'./grocries.component.html',
+        Γò╡                
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5: Argument of type 
+'GroupBuyingProduct' is not assignable to parameter 
+of type 'number'. [plugin angular-compiler]
+
+    src/app/grocries/grocries.component.html:30:32:
+      30 Γöé           <h4 
+(click)="openDeal(item)">{{item.productName}}</h4>
+         Γò╡                                 ~~~~
+
+  Error occurs in the template of component 
+GrocriesComponent.
+
+    src/app/grocries/grocries.component.ts:8:15:
+      8 Γöé   templateUrl: 
+'./grocries.component.html',
+        Γò╡                
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5: Argument of type 
+'GroupBuyingProduct' is not assignable to parameter 
+of type 'number'. [plugin angular-compiler]
+
+    src/app/grocries/grocries.component.html:53:57:
+      53 Γöé ... class="btn-detail" 
+(click)="openDeal(item)">View Details</button>
+         Γò╡                                        
+  ~~~~
+
+  Error occurs in the template of component 
+GrocriesComponent.
+
+    src/app/grocries/grocries.component.ts:8:15:
+      8 Γöé   templateUrl: 
+'./grocries.component.html',
+        Γò╡                
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+

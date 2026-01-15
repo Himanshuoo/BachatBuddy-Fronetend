@@ -22,6 +22,8 @@ import { CartComponent } from './cart/cart.component';
 import { DealsComponent } from './deals/deals.component';
 import { BeautyComponent } from './beauty/beauty.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
+import { AssistantComponent } from './assistant/assistant.component';
+import { GiftsComponent } from './gifts/gifts.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -48,6 +50,8 @@ const routes: Routes = [
   { path: 'product-detail/:id', component: ProductDetailComponent, canActivate: [AuthGuard] }, // view details
   { path: 'buy/:id', component: BuyComponent, canActivate: [AuthGuard] },
   { path: 'cart', component: CartComponent },
+  { path: 'assistant', component: AssistantComponent },
+  { path: 'gifts', component: GiftsComponent },
 
 
   { path: '**', component: NotfoundComponent }

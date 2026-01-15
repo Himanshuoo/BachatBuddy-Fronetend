@@ -69,8 +69,8 @@
     </div>
   </div>
 
-  <app-payment-dialog *ngIf="showPaymentDialog" [mode]="selectedPaymentMode" (confirm)="onPaymentConfirmed($event)"
-    (cancel)="cancelPaymentDialog()">
+  <app-payment-dialog *ngIf="showPaymentDialog" [mode]="$any(selectedPaymentMode)"
+    (confirm)="onPaymentConfirmed($event)" (cancel)="cancelPaymentDialog()">
   </app-payment-dialog>
 
   <!-- RIGHT SIDE -->

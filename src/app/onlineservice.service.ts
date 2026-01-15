@@ -58,7 +58,7 @@ export class OnlineserviceService {
       qty: 10,
       pimage: 'assets/tv.jpg',
       category: 'Electronics',
-      description: '43-inch Full HD Smart LED TV with built-in Wi-Fi and apps.'
+      description: '43-inch Full HD Smart LED TV with HDR support and smart features.'
     },
     {
       pid: 'p002',
@@ -77,6 +77,43 @@ export class OnlineserviceService {
       pimage: 'assets/mobile.jpg',
       category: 'Electronics',
       description: 'Latest 5G smartphone with 128GB storage and 64MP camera.'
+    },
+    // ✅ Gifts Section Data
+    {
+      pid: 'g001',
+      pname: 'Luxury Anniversary Box',
+      price: 2499,
+      qty: 10,
+      pimage: 'assets/anniversary-gift.png',
+      category: 'Anniversary',
+      description: 'A premium velvet box with silk ribbons, fresh roses, and a personalized heart card.'
+    },
+    {
+      pid: 'g002',
+      pname: 'Festive Birthday Hamper',
+      price: 1599,
+      qty: 25,
+      pimage: 'assets/birthday-gift.png',
+      category: 'Birthday',
+      description: 'The ultimate celebration box filled with balloons, confetti, and gourmet treats.'
+    },
+    {
+      pid: 'g003',
+      pname: 'Professional Executive Set',
+      price: 3200,
+      qty: 15,
+      pimage: 'assets/corporate-gift.png',
+      category: 'Corporate',
+      description: 'Sleek corporate gift set with a leather-bound notebook, premium pen, and matte mug.'
+    },
+    {
+      pid: 'g004',
+      pname: 'Handcrafted Heritage Basket',
+      price: 1899,
+      qty: 8,
+      pimage: 'assets/homemade-gift.png',
+      category: 'Homemade',
+      description: 'A rustic basket with hand-knitted essentials, organic honey, and beeswax candles.'
     }
   ];
 

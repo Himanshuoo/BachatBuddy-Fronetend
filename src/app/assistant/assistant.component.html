@@ -1,0 +1,36 @@
+<div class="assistant-wrapper">
+    <div class="chat-container shadow">
+        <div class="chat-header">
+            <div class="buddy-avatar">🤖</div>
+            <div class="header-info">
+                <h3>Ask Buddy</h3>
+                <p>Online | Always here to help!</p>
+            </div>
+        </div>
+
+        <div class="chat-messages" #scrollMe>
+            <div *ngFor="let msg of messages" class="message-row" [ngClass]="msg.sender">
+                <div class="message-bubble">
+                    <div class="message-text" [innerHTML]="msg.text"></div>
+                    <div class="message-time">{{ msg.timestamp | date:'shortTime' }}</div>
+                </div>
+            </div>
+
+            <div *ngIf="isTyping" class="message-row buddy">
+                <div class="message-bubble typing">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <input type="text" [(ngModel)]="userInput" (keyup)="handleKey($event)"
+                placeholder="Ask about deals, electronics, groceries..." aria-label="Ask Buddy" />
+            <button (click)="sendMessage()" class="send-btn" [disabled]="!userInput.trim()">
+                <span>🚀</span>
+            </button>
+        </div>
+    </div>
+</div>

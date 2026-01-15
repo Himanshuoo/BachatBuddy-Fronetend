@@ -23,7 +23,7 @@ export class BuyComponent implements OnInit {
   addresses: any[] = [];
 
   selectedAddressIndex = -1;
-  selectedPaymentMode = '';
+  selectedPaymentMode: 'UPI' | 'Card' | 'COD' | '' = '';
   showPaymentDialog = false;
   paymentDetails: any = null;
   isGroupDeal = false;
@@ -153,7 +153,7 @@ export class BuyComponent implements OnInit {
 
 
 
-  openPaymentDialog(mode: string) {
+  openPaymentDialog(mode: 'UPI' | 'Card') {
     this.selectedPaymentMode = mode;
     this.showPaymentDialog = true;
   }

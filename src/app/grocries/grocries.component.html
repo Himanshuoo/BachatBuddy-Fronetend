@@ -1,69 +1,62 @@
 <section class="group-deals">
-  <h2 class="section-title">🔥 Popular Grocery Deals</h2>
+  <div class="gifts-container">
+    <div class="gifts-header">
+      <h1>🔥 Popular Grocery Deals</h1>
+      <p>Join active groups to unlock wholesale prices!</p>
+    </div>
 
-  <!-- Skeleton Loader -->
-  <div *ngIf="loading" class="skeleton-grid">
-    <div class="skeleton-card" *ngFor="let i of [1,2,3,4]"></div>
-  </div>
+    <!-- Skeleton Loader -->
+    <div *ngIf="loading" class="skeleton-grid">
+      <div class="skeleton-card" *ngFor="let i of [1,2,3,4]"></div>
+    </div>
 
-  <!-- Error State -->
-  <div *ngIf="error && !loading" class="error-message">
-    <p>{{ error }}</p>
-  </div>
+    <!-- Error State -->
+    <div *ngIf="error && !loading" class="error-message">
+      <p>{{ error }}</p>
+    </div>
 
-  <!-- Deals Grid -->
-  <div class="deal-grid" *ngIf="!loading && !error">
-    <div class="deal-card" *ngFor="let item of popularProducts">
+    <!-- Deals Grid -->
+    <div class="gifts-grid" *ngIf="!loading && !error">
+      <div class="gift-card shadow-sm" *ngFor="let item of popularProducts">
+        <!-- Savings Badge (Top Right) -->
+        <span class="badge-savings">Save ₹{{ item.originalPrice - item.groupPrice }}</span>
 
-      <!-- Savings Badge -->
-      <span class="badge-savings">
-        Save ₹{{ item.originalPrice - item.groupPrice }}
-      </span>
+        <div class="card-image">
+          <img [src]="item.productImage" alt="{{item.productName}}" (click)="openDeal(item)">
+          <span class="category-badge">{{ item.category || 'Grocery' }}</span>
+        </div>
 
-      <!-- Category Tag -->
-      <span class="category-tag">{{ item.category }}</span>
+        <div class="card-body">
+          <h4 (click)="openDeal(item)">{{item.productName}}</h4>
+          <p class="description">{{ item.description || 'Exclusive grocery deal with significant savings for all
+            members.' }}</p>
 
-      <!-- Product Image -->
-      <img [src]="item.productImage" loading="lazy" [alt]="item.productName" />
+          <div class="price-row">
+            <span class="price">₹{{item.groupPrice}}</span>
+            <span class="original-price" *ngIf="item.originalPrice">₹{{item.originalPrice}}</span>
+          </div>
 
-      <h4 class="product-title">{{ item.productName }}</h4>
+          <!-- Progress Section -->
+          <div class="progress-section">
+            <div class="progress-container">
+              <div class="progress-bar-inner" [style.width.%]="item.progressPercentage"
+                [ngClass]="{'high': item.progressPercentage >= 80, 'mid': item.progressPercentage >= 40}">
+              </div>
+            </div>
+            <div class="joined-info">
+              <span>👥 {{item.currentJoined}}/{{item.totalNeeded}} joined</span>
+              <span class="viewing-now pulse" *ngIf="item.viewingNow">👀 {{item.viewingNow}}</span>
+            </div>
+          </div>
 
-      <!-- Price Section -->
-      <div class="price-row">
-        <del>₹{{ item.originalPrice }}</del>
-        <strong>₹{{ item.groupPrice }}</strong>
+          <div class="action-buttons">
+            <button class="btn-detail" (click)="openDeal(item)">View Details</button>
+            <button class="btn-buy" [disabled]="item.isGroupComplete" (click)="joinGroup(item)">
+              {{ item.hasUserJoined ? 'Already Joined' : item.isGroupComplete ? 'Group Full' : 'Join Group' }}
+            </button>
+          </div>
+        </div>
       </div>
-
-      <!-- Time Left -->
-      <p class="time-left">⏳ {{ item.timeLeft }} left</p>
-
-      <!-- Progress Bar -->
-      <div class="progress-container">
-        <div class="progress-bar" [style.width.%]="item.progressPercentage" [ngClass]="{
-            'low': item.progressPercentage < 40,
-            'mid': item.progressPercentage >= 40 && item.progressPercentage < 80,
-            'high': item.progressPercentage >= 80
-          }"></div>
-      </div>
-
-      <p class="joined-info">
-        {{ item.currentJoined }} joined / {{ item.totalNeeded }} needed
-      </p>
-
-      <p class="viewing-now">👀 {{ item.viewingNow }} viewing now</p>
-
-      <!-- Buttons -->
-      <button class="btn-primary" (click)="joinGroup(item)" [disabled]="item.isGroupComplete">
-        {{ item.hasUserJoined ? 'Already Joined' : item.isGroupComplete ? 'Group Full' : 'Join Group' }}
-      </button>
-
-      <button class="btn-secondary" (click)="openDeal(item.id)">
-        View Details
-      </button>
-
-      <button class="btn-invite" (click)="shareDeal(item)">
-        Invite Friends
-      </button>
     </div>
   </div>
 </section>
