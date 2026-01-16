@@ -40,11 +40,19 @@ export class GiftsComponent implements OnInit {
         }
     }
 
-    viewDetails(id: string) {
-        this.router.navigate(['/product-detail', id]);
+    viewDetails(item: any) {
+        const queryParams: any = {};
+        if (item.needed) {
+            queryParams.type = 'group';
+        }
+        this.router.navigate(['/product-detail', item.pid], { queryParams });
     }
 
-    buyNow(id: string) {
-        this.router.navigate(['/buy', id]);
+    buyNow(item: any) {
+        const queryParams: any = {};
+        if (item.needed) {
+            queryParams.type = 'group';
+        }
+        this.router.navigate(['/buy', item.pid], { queryParams });
     }
 }

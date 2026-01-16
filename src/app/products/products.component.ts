@@ -52,12 +52,19 @@ export class ProductsComponent implements OnInit {
     });
   }
 
-  viewDetails(pid: any) {
-    // Navigate using ID as a route parameter
-    this.router.navigate(['/product-detail', pid]);
+  viewDetails(item: any) {
+    const queryParams: any = {};
+    if (item.needed) {
+      queryParams.type = 'group';
+    }
+    this.router.navigate(['/product-detail', item.pid], { queryParams });
   }
 
-  buyNow(pid: any) {
-    this.router.navigate(['/buy', pid]);
+  buyNow(item: any) {
+    const queryParams: any = {};
+    if (item.needed) {
+      queryParams.type = 'group';
+    }
+    this.router.navigate(['/buy', item.pid], { queryParams });
   }
 }

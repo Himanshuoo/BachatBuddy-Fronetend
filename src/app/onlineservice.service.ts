@@ -38,9 +38,44 @@ export class OnlineserviceService {
       pname: 'Wedding Saree',
       price: 2999,
       qty: 15,
-      pimage: 'assets/images/saree.png',
+      pimage: 'assets/sneakers.jpg', // Placeholder image from assets
       category: 'Wedding Bazar',
-      description: 'Elegant silk saree with intricate embroidery, perfect for weddings.'
+      description: 'Elegant silk saree with intricate embroidery, perfect for weddings.',
+      joined: 6,
+      needed: 10
+    },
+    {
+      pid: 'w001',
+      pname: 'Designer Sherwani',
+      price: 8999,
+      qty: 10,
+      pimage: 'assets/tshirt.jpg', // Placeholder
+      category: 'Wedding Bazar',
+      description: 'Handcrafted premium sherwani with golden motifs and Dupion silk.',
+      joined: 4,
+      needed: 8
+    },
+    {
+      pid: 'w002',
+      pname: 'Kundan Jewelry Set',
+      price: 4500,
+      qty: 20,
+      pimage: 'assets/watch.jpg', // Placeholder
+      category: 'Wedding Bazar',
+      description: 'Traditional kundan choker set with matching earrings and maang tikka.',
+      joined: 12,
+      needed: 15
+    },
+    {
+      pid: 'w003',
+      pname: 'Designer Bridal Lehenga',
+      price: 15999,
+      qty: 5,
+      pimage: 'assets/images/gifts/homemade.png', // Placeholder
+      category: 'Wedding Bazar',
+      description: 'Exquisite red bridal lehenga with heavy zardosi work and velvet borders.',
+      joined: 3,
+      needed: 5
     },
     {
       pid: '3',
@@ -86,7 +121,9 @@ export class OnlineserviceService {
       qty: 10,
       pimage: 'assets/anniversary-gift.png',
       category: 'Anniversary',
-      description: 'A premium velvet box with silk ribbons, fresh roses, and a personalized heart card.'
+      description: 'A premium velvet box with silk ribbons, fresh roses, and a personalized heart card.',
+      joined: 5,
+      needed: 10
     },
     {
       pid: 'g002',
@@ -95,7 +132,9 @@ export class OnlineserviceService {
       qty: 25,
       pimage: 'assets/birthday-gift.png',
       category: 'Birthday',
-      description: 'The ultimate celebration box filled with balloons, confetti, and gourmet treats.'
+      description: 'The ultimate celebration box filled with balloons, confetti, and gourmet treats.',
+      joined: 15,
+      needed: 20
     },
     {
       pid: 'g003',
@@ -104,7 +143,9 @@ export class OnlineserviceService {
       qty: 15,
       pimage: 'assets/corporate-gift.png',
       category: 'Corporate',
-      description: 'Sleek corporate gift set with a leather-bound notebook, premium pen, and matte mug.'
+      description: 'Sleek corporate gift set with a leather-bound notebook, premium pen, and matte mug.',
+      joined: 3,
+      needed: 8
     },
     {
       pid: 'g004',
@@ -113,7 +154,9 @@ export class OnlineserviceService {
       qty: 8,
       pimage: 'assets/homemade-gift.png',
       category: 'Homemade',
-      description: 'A rustic basket with hand-knitted essentials, organic honey, and beeswax candles.'
+      description: 'A rustic basket with hand-knitted essentials, organic honey, and beeswax candles.',
+      joined: 4,
+      needed: 6
     }
   ];
 
@@ -126,6 +169,15 @@ export class OnlineserviceService {
     // Loose equality to handle string/number mismatch
     return this.prod.find(p => p.pid == id);
   }
+
+  // ✅ Increment the "joined" count for hybrid group deals
+  incrementJoinedCount(id: string, count: number = 1): void {
+    const p = this.getProductById(id);
+    if (p && p.joined !== undefined) {
+      p.joined += count;
+      console.log(`Updated joined count for product ${id}: ${p.joined}`);
+    }
+  }
 }
 
 export interface IProd {
@@ -134,6 +186,8 @@ export interface IProd {
   price: number;
   qty: number;
   pimage: string;
-  category?: string;    // Added
-  description?: string; // Added
+  category?: string;
+  description?: string;
+  joined?: number;    // Added for group progress
+  needed?: number;    // Added for group progress
 }

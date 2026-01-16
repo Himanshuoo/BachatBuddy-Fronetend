@@ -14,22 +14,37 @@
 
   <!-- Products Grid -->
   <div class="gifts-grid">
-    <div class="gift-card shadow-sm" *ngFor="let item of filteredProducts">
+    <div class="gift-card shadow-sm" *ngFor="let item of filteredProducts" (click)="viewDetails(item)"
+      style="cursor: pointer;">
       <div class="card-image">
-        <img [src]="item.pimage" [alt]="item.pname" (click)="viewDetails(item.pid)">
+        <img [src]="item.pimage" [alt]="item.pname">
         <span class="category-badge">{{ item.category }}</span>
       </div>
       <div class="card-body">
-        <h4 (click)="viewDetails(item.pid)">{{ item.pname }}</h4>
+        <h4>{{ item.pname }}</h4>
         <p class="description">{{ item.description || 'Premium quality product selected for perfection and style.' }}
         </p>
         <div class="price-row">
           <span class="price">₹{{ item.price }}</span>
-          <span class="stock" *ngIf="item.qty > 0">In Stock</span>
+          <span class="stock" *ngIf="item.qty > 0 && !item.needed">In Stock</span>
         </div>
+
+        <!-- Optional Group Progress (Wedding Bazaar items) -->
+        <div class="progress-section" *ngIf="item.needed && item.joined !== undefined">
+          <div class="progress-container">
+            <div class="progress-bar-inner" [style.width.%]="(item.joined / item.needed) * 100">
+            </div>
+          </div>
+          <div class="joined-info">
+            <span>👥 {{item.joined}}/{{item.needed}} joined</span>
+          </div>
+        </div>
+
         <div class="action-buttons">
-          <button class="btn-detail" (click)="viewDetails(item.pid)">View Details</button>
-          <button class="btn-buy" (click)="buyNow(item.pid)">Buy Now</button>
+          <button class="btn-detail" (click)="$event.stopPropagation(); viewDetails(item)">View Details</button>
+          <button class="btn-buy" (click)="$event.stopPropagation(); buyNow(item)">
+            {{ item.needed ? 'Join Group' : 'Buy Now' }}
+          </button>
         </div>
       </div>
     </div>

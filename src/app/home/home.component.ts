@@ -55,4 +55,11 @@ export class HomeComponent implements OnInit {
     // Navigate to Buy page with group type
     this.router.navigate(['/buy', product.id], { queryParams: { type: 'group' } });
   }
+
+  /**
+   * ✅ Navigate to deal details
+   */
+  viewDetails(productId: any): void {
+    this.router.navigate(['/product-detail', productId], { queryParams: { type: 'group' } });
+  }
 }

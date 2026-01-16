@@ -73,12 +73,18 @@ export class ProductDetailComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     const type = this.route.snapshot.queryParamMap.get('type');
-    this.isGroupDeal = (type === 'group');
 
     if (id) {
-      if (this.isGroupDeal) {
+      // ✅ Check OnlineService first (includes standard products & hybrid Wedding Bazar deals)
+      const onlineProd = this.service.getProductById(id);
+      if (onlineProd) {
+        this.loadProduct(id);
+      } else if (type === 'group') {
+        // Fallback to GroupBuyingService for dynamic deals (Groceries/Home)
+        this.isGroupDeal = true;
         this.loadGroupProduct(Number(id));
       } else {
+        // Just in case, try loading as standard
         this.loadProduct(id);
       }
     }
@@ -113,10 +119,27 @@ export class ProductDetailComponent implements OnInit {
   loadProduct(id: string) {
     const p = this.service.getProductById(id);
     if (p) {
-      this.product = {
-        ...p,
-        originalPrice: p.price // For consistent UI rendering
-      };
+      if (p.needed) {
+        this.isGroupDeal = true;
+        this.product = {
+          pid: String(p.pid),
+          pname: p.pname,
+          price: p.price,
+          originalPrice: Math.round(p.price * 1.3), // Simulated original price
+          qty: p.qty,
+          pimage: p.pimage,
+          description: p.description || 'Excellent group deal on BachatBuddy!',
+          category: p.category,
+          progressPercentage: Math.round((p.joined! / p.needed!) * 100),
+          currentJoined: p.joined,
+          totalNeeded: p.needed
+        };
+      } else {
+        this.product = {
+          ...p,
+          originalPrice: p.price
+        };
+      }
       this.loadReviews();
       this.loadRelatedProducts();
     } else {

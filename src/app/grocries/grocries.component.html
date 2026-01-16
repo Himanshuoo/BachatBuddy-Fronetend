@@ -17,17 +17,18 @@
 
     <!-- Deals Grid -->
     <div class="gifts-grid" *ngIf="!loading && !error">
-      <div class="gift-card shadow-sm" *ngFor="let item of popularProducts">
+      <div class="gift-card shadow-sm" *ngFor="let item of popularProducts" (click)="openDeal(item)"
+        style="cursor: pointer;">
         <!-- Savings Badge (Top Right) -->
         <span class="badge-savings">Save ₹{{ item.originalPrice - item.groupPrice }}</span>
 
         <div class="card-image">
-          <img [src]="item.productImage" alt="{{item.productName}}" (click)="openDeal(item)">
+          <img [src]="item.productImage" alt="{{item.productName}}">
           <span class="category-badge">{{ item.category || 'Grocery' }}</span>
         </div>
 
         <div class="card-body">
-          <h4 (click)="openDeal(item)">{{item.productName}}</h4>
+          <h4>{{item.productName}}</h4>
           <p class="description">{{ item.description || 'Exclusive grocery deal with significant savings for all
             members.' }}</p>
 
@@ -50,8 +51,9 @@
           </div>
 
           <div class="action-buttons">
-            <button class="btn-detail" (click)="openDeal(item)">View Details</button>
-            <button class="btn-buy" [disabled]="item.isGroupComplete" (click)="joinGroup(item)">
+            <button class="btn-detail" (click)="$event.stopPropagation(); openDeal(item)">View Details</button>
+            <button class="btn-buy" [disabled]="item.isGroupComplete"
+              (click)="$event.stopPropagation(); joinGroup(item)">
               {{ item.hasUserJoined ? 'Already Joined' : item.isGroupComplete ? 'Group Full' : 'Join Group' }}
             </button>
           </div>

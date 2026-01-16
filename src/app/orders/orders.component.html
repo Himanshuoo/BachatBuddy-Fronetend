@@ -2,8 +2,8 @@
   <!-- Hero Welcome Box -->
   <div class="hero-header">
     <div class="container">
-      <h1>Hello, {{ userName }}! 👋</h1>
-      <p class="opacity-75 fs-5">Track your shopping happiness here... 📦✨</p>
+      <h1>My Orders 📦</h1>
+      <p class="fs-5">Track, review, and manage your shopping history</p>
     </div>
   </div>
 
@@ -13,7 +13,7 @@
       <div class="glass-search-card">
         <div class="d-flex align-items-center">
           <div class="search-input-wrap flex-grow-1">
-            <input type="text" class="form-control" placeholder="Search your orders, status or city..."
+            <input type="text" class="form-control" placeholder="Search by product name, ID, or city..."
               [(ngModel)]="searchTerm" (input)="filterOrders()">
             <span class="search-icon">🔍</span>
           </div>
@@ -25,7 +25,7 @@
     <!-- Loading State -->
     <div *ngIf="loading" class="text-center py-5">
       <div class="spinner-grow text-primary" role="status"></div>
-      <h3 class="mt-4 fw-bold">Opening your parcels... 🎁</h3>
+      <h3 class="mt-4 fw-bold">Fetching your history... 🕒</h3>
     </div>
 
     <!-- Error State -->
@@ -33,7 +33,7 @@
       <div class="d-flex align-items-center">
         <span class="fs-1 me-3">⚠️</span>
         <div>
-          <h5 class="fw-bold mb-1">Oops! Something went wrong</h5>
+          <h5 class="fw-bold mb-1">Unable to load orders</h5>
           <p class="mb-0">{{ error }}</p>
         </div>
       </div>
@@ -42,18 +42,17 @@
     <!-- Empty State -->
     <div *ngIf="!loading && filteredOrders.length === 0" class="empty-hero text-center py-5">
       <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/myorders-empty_823331.png"
-        alt="Empty" class="mb-4" style="width: 280px; opacity: 0.9;">
-      <h2 class="fw-bold">No Orders Yet? 🏚️</h2>
-      <p class="text-muted fs-5 mb-4">Looks like your shopping bag is waiting for some action!</p>
-      <a routerLink="/products" class="btn btn-start-shopping">EXPLORE PRODUCTS</a>
+        alt="Empty" class="mb-4" style="width: 250px; opacity: 0.8;">
+      <h2 class="fw-bold">No orders found</h2>
+      <p class="text-muted fs-5 mb-4">Start shopping to see your orders here!</p>
+      <a routerLink="/products" class="btn btn-start-shopping">CONTINUE SHOPPING</a>
     </div>
 
     <!-- Modern Interactive Orders List -->
     <div class="orders-grid mb-5" *ngIf="!loading && filteredOrders.length > 0">
-      <div class="order-card-ultra p-0 shadow-sm" *ngFor="let order of filteredOrders; let i = index"
+      <div class="order-card-ultra shadow-sm" *ngFor="let order of filteredOrders; let i = index"
         [style.animation-delay]="i * 0.1 + 's'">
         <div class="row g-0">
-          <!-- Main Order Info (Left Side) -->
           <!-- Left Side: Status & Actions -->
           <div class="col-md-3 p-4 bg-light d-flex flex-column align-items-center justify-content-center text-center">
             <div class="st-bubble mb-3" [ngClass]="{
@@ -61,23 +60,29 @@
               'delivered': order.status === 'Delivered',
               'cancelled': order.status === 'Cancelled'
             }">
-              {{ order.status === 'Delivered' ? '✅' : order.status === 'Cancelled' ? '❌' : '🚚' }}
+              <span>{{ order.status === 'Delivered' ? '●' : order.status === 'Cancelled' ? '●' : '●' }}</span>
               {{ order.status }}
             </div>
-            <p class="text-muted small mb-1">Ordered on:</p>
+            <p class="text-muted small mb-1">Order Date</p>
             <h6 class="fw-bold mb-3">{{ (order.date | date:'MMM d, yyyy') || 'Recent' }}</h6>
 
-            <div class="d-grid gap-2 w-100">
-              <button class="btn btn-outline-primary btn-sm rounded-pill fw-bold" (click)="reviewOrder(order)">⭐
+            <div class="d-grid gap-2 w-100 px-3">
+              <button class="btn btn-outline-primary btn-sm rounded-3 fw-bold py-2" (click)="reviewOrder(order)">⭐
                 REVIEW</button>
-              <button class="btn btn-outline-danger btn-sm rounded-pill fw-bold" *ngIf="order.status === 'Pending'"
-                (click)="cancelOrder(order)">❌ CANCEL</button>
+              <button class="btn btn-outline-danger btn-sm rounded-3 fw-bold py-2" *ngIf="order.status === 'Pending'"
+                (click)="cancelOrder(order)">✕ CANCEL</button>
             </div>
           </div>
 
-          <!-- Mid Section: Timeline -->
-          <div class="col-md-5 p-4 d-flex flex-column justify-content-center border-end">
-            <h5 class="fw-bold text-primary mb-3">Order #{{ order.id || 'ORD' + (i + 142) }}</h5>
+          <!-- Mid Section: Timeline & Shipping -->
+          <div class="col-md-5 p-4 d-flex flex-column justify-content-center border-md-end">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <div>
+                <p class="text-muted small mb-0">ORDER ID</p>
+                <h5 class="fw-bold text-primary">#{{ order.id ? order.id.toString().substring(0,8).toUpperCase() : 'ORD'
+                  + (i + 142) }}</h5>
+              </div>
+            </div>
 
             <!-- Interactive Visual Timeline -->
             <div class="timeline-wrap">
@@ -96,52 +101,53 @@
               </div>
             </div>
 
-            <div class="mt-4 p-3 bg-light rounded-4 border-1 border-dashed">
-              <p class="small text-muted mb-0">📦 Shipping to: <strong>{{ order.shippingAddress?.city }}, {{
+            <div class="mt-4 p-3 rounded-4" style="background: rgba(0,0,0,0.02); border: 1px dashed rgba(0,0,0,0.1);">
+              <p class="small text-muted mb-0">📍 Delivery to: <strong class="text-dark">{{ order.shippingAddress?.city
+                  }}, {{
                   order.shippingAddress?.pincode }}</strong></p>
             </div>
           </div>
 
           <!-- Right Side: Price Details (Items + Totals) -->
           <div class="col-md-4 p-4 order-price-summary">
-            <h6 class="fw-bold text-uppercase mb-3" style="letter-spacing: 1px; font-size: 0.8rem;">Price Details</h6>
+            <h6 class="fw-bold text-uppercase mb-3" style="letter-spacing: 1px; font-size: 0.75rem; color: #94a3b8;">
+              Items Summary</h6>
 
             <div class="mini-items-scroll">
-              <!-- Cart items, single items, and group deals all use items array now -->
               <div class="mini-item-row" *ngFor="let item of order.items">
                 <img [src]="item.pimage || item.image || 'assets/default-product.jpg'" class="mini-img"
                   [alt]="item.pname">
                 <div class="mini-info">
                   <span class="mini-name">{{ item.pname || item.name || 'Product' }}</span>
-                  <span class="mini-qty">Qty: {{ item.qty || item.quantity || 1 }}</span>
+                  <span class="mini-qty">Quantity: {{ item.qty || item.quantity || 1 }}</span>
                 </div>
                 <span class="mini-price">₹{{ item.price || 0 }}</span>
               </div>
 
-              <!-- Fallback if array is somehow empty (legacy orders) -->
+              <!-- Fallback (legacy orders) -->
               <div class="mini-item-row" *ngIf="!order.items || order.items.length === 0">
                 <img [src]="order.imageUrl || 'assets/default-product.jpg'" class="mini-img">
                 <div class="mini-info">
                   <span class="mini-name">{{ order.productName }}</span>
-                  <span class="mini-qty">Qty: {{ order.quantity || 1 }}</span>
+                  <span class="mini-qty">Quantity: {{ order.quantity || 1 }}</span>
                 </div>
                 <span class="mini-price">₹{{ order.total }}</span>
               </div>
             </div>
 
-            <div class="price-breakdown">
+            <div class="price-breakdown pt-2">
               <div class="d-flex justify-content-between mb-2">
                 <span class="text-muted small">Subtotal</span>
-                <span class="fw-bold">₹{{ (order.total || 0) + (order.savings || 0) }}</span>
+                <span class="fw-bold small">₹{{ (order.total || 0) + (order.savings || 0) }}</span>
               </div>
               <div class="d-flex justify-content-between mb-2 text-success" *ngIf="order.savings > 0">
-                <span class="small">Extra Savings</span>
-                <span class="fw-bold">- ₹{{ order.savings || 0 }}</span>
+                <span class="small">Voucher/Group Discount</span>
+                <span class="fw-bold small">- ₹{{ order.savings || 0 }}</span>
               </div>
-              <hr class="my-2 border-secondary opacity-25">
-              <div class="d-flex justify-content-between">
-                <span class="fw-bolder">Total Paid</span>
-                <span class="fw-bolder fs-5 text-primary">₹{{ order.total || 0 }}</span>
+              <hr class="my-2">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-bold">Amount Paid</span>
+                <span class="fw-bolder fs-4 text-primary">₹{{ order.total || 0 }}</span>
               </div>
             </div>
           </div>

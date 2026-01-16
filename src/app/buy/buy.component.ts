@@ -67,7 +67,13 @@ export class BuyComponent implements OnInit {
       this.loadCartProducts();
     } else if (id) {
       if (this.isGroupDeal) {
-        this.loadGroupProduct(Number(id));
+        // ✅ Special check: Is this a Wedding Bazar deal from OnlineService?
+        const onlineProd = this.service.getProductById(id);
+        if (onlineProd && onlineProd.needed) {
+          this.loadHybridGroupProduct(onlineProd);
+        } else {
+          this.loadGroupProduct(Number(id));
+        }
       } else {
         this.product = this.service.getProductById(id);
         if (this.product) {
@@ -85,6 +91,23 @@ export class BuyComponent implements OnInit {
         }
       }
     }
+  }
+
+  /**
+   * ✅ Handle group deals stored in OnlineserviceService (e.g., Wedding Bazar)
+   */
+  loadHybridGroupProduct(p: IProd) {
+    this.product = p;
+    const groupSavings = Math.round(p.price * 0.3); // Assume 30% savings for group deals in OnlineService
+    this.totalSavings = groupSavings * this.quantity;
+    this.totalPrice = p.price * this.quantity;
+
+    this.cartItems = [{
+      pname: p.pname,
+      pimage: p.pimage,
+      price: p.price,
+      qty: this.quantity
+    }];
   }
 
   loadCartProducts() {
@@ -218,10 +241,17 @@ export class BuyComponent implements OnInit {
 
         // If it's a group deal, also join the group with the specified quantity
         if (this.isGroupDeal && this.product?.pid) {
-          this.groupBuyingService.joinGroupByIds(Number(uid), Number(this.product.pid), this.quantity).subscribe({
-            next: (joinRes) => console.log('Group joined successfully:', joinRes),
-            error: (err) => console.error('Failed to update group join count:', err)
-          });
+          const numericPid = Number(this.product.pid);
+          if (isNaN(numericPid)) {
+            // ✅ Hybrid Deal (OnlineService)
+            this.service.incrementJoinedCount(this.product.pid, this.quantity);
+          } else {
+            // ✅ Backend Deal (GroupBuyingService)
+            this.groupBuyingService.joinGroupByIds(Number(uid), numericPid, this.quantity).subscribe({
+              next: (joinRes) => console.log('Group joined successfully:', joinRes),
+              error: (err) => console.error('Failed to update group join count:', err)
+            });
+          }
         }
 
         alert(`✅ Order placed successfully via ${this.selectedPaymentMode}!`);

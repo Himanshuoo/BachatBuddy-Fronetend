@@ -197,6 +197,37 @@
   background: #333;
 }
 
+/* Progress Section (Group Deals) */
+.progress-section {
+  margin-bottom: 15px;
+  margin-top: auto;
+  /* Push above buttons */
+}
+
+.progress-container {
+  background: #f0f0f0;
+  height: 6px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-bar-inner {
+  height: 100%;
+  background: #ff9800;
+  /* Standard warning color */
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+
+.joined-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: 600;
+}
+
 /* Responsiveness */
 @media (max-width: 600px) {
   .filter-bar {
